@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>DCSC Soccer Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header id="app-header">
+    <h1 id="team-name">Soccer Tracker</h1>
+    <p id="season-label"></p>
+  </header>
+
+  <main>
+    <!-- Games Tab -->
+    <section id="tab-games" class="tab-panel active">
+      <div id="season-summary"></div>
+      <div id="game-action-btn"></div>
+      <div id="games-list"></div>
+    </section>
+
+    <!-- Stats Tab -->
+    <section id="tab-stats" class="tab-panel">
+      <div class="stats-toggle">
+        <button class="stats-toggle-btn active" data-view="team">Team</button>
+        <button class="stats-toggle-btn" data-view="players">Players</button>
+      </div>
+      <div id="stats-team" class="stats-view active">
+        <div id="team-record"></div>
+        <div id="opponent-history"></div>
+      </div>
+      <div id="stats-players" class="stats-view">
+        <div id="player-leaderboard"></div>
+      </div>
+    </section>
+
+    <!-- Roster Tab -->
+    <section id="tab-roster" class="tab-panel">
+      <div id="roster-list"></div>
+      <button id="add-player-btn" class="btn btn-primary">+ Add Player</button>
+      <div class="data-controls">
+        <button id="export-data-btn" class="btn btn-secondary btn-full">Export Data</button>
+        <label class="btn btn-secondary btn-full" for="import-file">Import Data</label>
+        <input type="file" id="import-file" accept=".json" style="display:none">
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Tab Bar -->
+  <nav id="tab-bar">
+    <button class="tab-btn active" data-tab="games">Games</button>
+    <button class="tab-btn" data-tab="stats">Stats</button>
+    <button class="tab-btn" data-tab="roster">Roster</button>
+  </nav>
+
+  <!-- Game Overlay -->
+  <div id="game-overlay" class="hidden">
+    <!-- Pre-game Setup -->
+    <div id="pregame-setup" class="overlay-screen hidden">
+      <h2>New Game</h2>
+      <div class="form-group">
+        <label for="opponent-input">Opponent</label>
+        <input type="text" id="opponent-input" placeholder="Enter opponent name" autocomplete="off">
+      </div>
+      <h3>Who's playing today?</h3>
+      <div id="attendance-list"></div>
+      <div class="overlay-actions">
+        <button id="cancel-game-btn" class="btn btn-secondary">Cancel</button>
+        <button id="kickoff-btn" class="btn btn-primary">Kick Off!</button>
+      </div>
+    </div>
+
+    <!-- In-Game View -->
+    <div id="ingame-view" class="overlay-screen hidden">
+      <div id="scoreboard">
+        <div id="score-half">1st Half</div>
+        <div id="score-display">
+          <span id="score-home">0</span>
+          <span class="score-separator">-</span>
+          <span id="score-away">0</span>
+        </div>
+        <div id="score-teams">
+          <span id="score-home-label">DCSC</span>
+          <span id="score-away-label">Opponent</span>
+        </div>
+      </div>
+      <div id="goal-flash" class="hidden">GOAL!</div>
+      <div id="player-grid"></div>
+      <div class="game-controls">
+        <button id="opponent-goal-btn" class="btn btn-danger">Opponent Goal</button>
+        <button id="undo-btn" class="btn btn-secondary">Undo</button>
+      </div>
+      <div class="game-controls">
+        <button id="half-toggle-btn" class="btn btn-secondary">Switch to 2nd Half</button>
+        <button id="end-game-btn" class="btn btn-warning">End Game</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Assist Modal -->
+  <div id="assist-modal" class="hidden">
+    <div class="modal-content">
+      <h3 id="assist-title">Who assisted?</h3>
+      <div id="assist-grid"></div>
+      <button id="no-assist-btn" class="btn btn-secondary btn-full">No Assist</button>
+    </div>
+  </div>
+
+  <!-- End Game Confirmation -->
+  <div id="endgame-confirm" class="hidden">
+    <div class="modal-content">
+      <h3>End Game?</h3>
+      <p id="endgame-score"></p>
+      <div class="modal-actions">
+        <button id="endgame-cancel" class="btn btn-secondary">Keep Playing</button>
+        <button id="endgame-ok" class="btn btn-primary">End Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Player Modal -->
+  <div id="edit-player-modal" class="hidden">
+    <div class="modal-content">
+      <h3 id="edit-player-title">Edit Player</h3>
+      <div class="form-group">
+        <label for="edit-player-name">Name</label>
+        <input type="text" id="edit-player-name" autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button id="edit-player-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="edit-player-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Game Modal -->
+  <div id="edit-game-modal" class="hidden">
+    <div class="modal-content">
+      <h3>Edit Game</h3>
+      <div class="form-group">
+        <label for="edit-game-opponent">Opponent</label>
+        <input type="text" id="edit-game-opponent" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="edit-game-date">Date</label>
+        <input type="date" id="edit-game-date">
+      </div>
+      <h4 class="edit-section-label">DCSC Goals</h4>
+      <div id="edit-game-goals"></div>
+      <button id="edit-add-goal-btn" class="btn btn-secondary btn-full" style="margin-top:8px">+ Add Goal</button>
+      <h4 class="edit-section-label">Opponent Goals</h4>
+      <div class="opponent-goal-counter">
+        <button class="btn btn-counter" id="opp-goal-minus">−</button>
+        <span id="edit-opponent-goals">0</span>
+        <button class="btn btn-counter" id="opp-goal-plus">+</button>
+      </div>
+      <div class="modal-actions edit-game-actions">
+        <button id="edit-game-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="edit-game-delete" class="btn btn-danger">Delete</button>
+        <button id="edit-game-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Game Confirmation -->
+  <div id="delete-game-confirm" class="hidden">
+    <div class="modal-content">
+      <h3>Delete Game?</h3>
+      <p id="delete-game-info"></p>
+      <p style="color:#c0392b; font-size:0.9rem;">This cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="delete-game-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="delete-game-ok" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,842 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
+  padding-bottom: 80px;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+#app-header {
+  background: #1a5632;
+  color: white;
+  padding: 16px 20px 12px;
+  text-align: center;
+}
+
+#app-header h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+#season-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Tab Bar */
+#tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: white;
+  border-top: 1px solid #ddd;
+  z-index: 100;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 0;
+  border: none;
+  background: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  color: #1a5632;
+  border-top: 3px solid #1a5632;
+  padding-top: 11px;
+}
+
+/* Tab Panels */
+.tab-panel {
+  display: none;
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 14px 24px;
+  transition: opacity 0.15s;
+}
+
+.btn:active {
+  opacity: 0.7;
+}
+
+.btn-primary {
+  background: #1a5632;
+  color: white;
+}
+
+.btn-secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-danger {
+  background: #c0392b;
+  color: white;
+}
+
+.btn-warning {
+  background: #e67e22;
+  color: white;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-large {
+  font-size: 1.2rem;
+  padding: 18px 32px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Season Summary */
+#season-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.record-line {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a5632;
+  margin-top: 4px;
+}
+
+.record-detail {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Game Action Button */
+#game-action-btn {
+  margin-bottom: 16px;
+}
+
+/* Games List */
+.game-card {
+  background: white;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.game-matchup {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.game-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.result-W { color: #27ae60; }
+.result-L { color: #c0392b; }
+.result-D { color: #f39c12; }
+
+.game-details {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.game-details.expanded {
+  display: block;
+}
+
+.goal-event {
+  padding: 4px 0;
+}
+
+.goal-event .scorer {
+  font-weight: 600;
+}
+
+.goal-event .assist {
+  color: #888;
+}
+
+/* Stats */
+.stats-toggle {
+  display: flex;
+  background: #e0e0e0;
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 16px;
+}
+
+.stats-toggle-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+}
+
+.stats-toggle-btn.active {
+  background: white;
+  color: #1a5632;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stats-view {
+  display: none;
+}
+
+.stats-view.active {
+  display: block;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+}
+
+.stats-table th {
+  background: #1a5632;
+  color: white;
+  padding: 10px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+}
+
+.stats-table th.sortable:hover {
+  background: #247040;
+}
+
+.stats-table th.sorted {
+  background: #247040;
+}
+
+.stats-table th.sorted::after {
+  content: " ▼";
+  font-size: 0.7rem;
+}
+
+.stats-table td {
+  padding: 10px 8px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+
+.stats-table td:first-child {
+  font-weight: 600;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a5632;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Roster */
+.roster-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.roster-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.roster-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.roster-actions button {
+  border: none;
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.roster-actions button:active {
+  background: #ddd;
+}
+
+.roster-actions .delete-btn {
+  color: #c0392b;
+}
+
+#add-player-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.data-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.data-controls .btn {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 12px;
+  cursor: pointer;
+}
+
+/* Game Overlay */
+#game-overlay {
+  position: fixed;
+  inset: 0;
+  background: #f5f5f5;
+  z-index: 200;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#game-overlay.hidden {
+  display: none;
+}
+
+.overlay-screen {
+  padding: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.overlay-screen.hidden {
+  display: none;
+}
+
+.overlay-screen h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1a5632;
+}
+
+.overlay-screen h3 {
+  font-size: 1rem;
+  margin: 20px 0 12px;
+  color: #555;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #1a5632;
+}
+
+.overlay-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.overlay-actions .btn {
+  flex: 1;
+}
+
+/* Attendance List */
+.attendance-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.attendance-item label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+}
+
+.attendance-item input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  accent-color: #1a5632;
+}
+
+/* Scoreboard */
+#scoreboard {
+  background: #1a5632;
+  color: white;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#score-half {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+#score-display {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.score-separator {
+  margin: 0 8px;
+  opacity: 0.6;
+}
+
+#score-teams {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+/* Goal Flash */
+#goal-flash {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #27ae60;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 800;
+  padding: 20px 50px;
+  border-radius: 16px;
+  z-index: 300;
+  animation: flashPulse 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+#goal-flash.hidden {
+  display: none;
+}
+
+@keyframes flashPulse {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  30% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Player Grid */
+#player-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.player-btn {
+  background: white;
+  border: 2px solid #1a5632;
+  border-radius: 12px;
+  padding: 18px 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a5632;
+  cursor: pointer;
+  text-align: center;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-btn:active {
+  background: #1a5632;
+  color: white;
+}
+
+/* Game Controls */
+.game-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.game-controls .btn {
+  flex: 1;
+  padding: 14px 8px;
+  font-size: 0.9rem;
+}
+
+/* Modals (Assist, End Game, Edit Player, Edit Game, Delete Game) */
+#assist-modal,
+#endgame-confirm,
+#edit-player-modal,
+#edit-game-modal,
+#delete-game-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#assist-modal.hidden,
+#endgame-confirm.hidden,
+#edit-player-modal.hidden,
+#edit-game-modal.hidden,
+#delete-game-confirm.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px 32px;
+  width: calc(100% - 32px);
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #1a5632;
+}
+
+.modal-content p {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+#assist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.assist-btn {
+  background: white;
+  border: 2px solid #1a5632;
+  border-radius: 10px;
+  padding: 14px 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a5632;
+  cursor: pointer;
+  text-align: center;
+}
+
+.assist-btn:active {
+  background: #1a5632;
+  color: white;
+}
+
+/* Game Card Actions (Edit/Delete buttons in expanded details) */
+.game-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+/* Edit Game Modal */
+.edit-section-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin: 16px 0 8px;
+}
+
+.edit-goal-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.edit-goal-row select {
+  flex: 1;
+  padding: 10px 8px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: white;
+  color: #333;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.edit-goal-row select:focus {
+  border-color: #1a5632;
+  outline: none;
+}
+
+.edit-goal-row .btn-remove {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border: none;
+  background: #f5e6e6;
+  color: #c0392b;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-goal-row .btn-remove:active {
+  background: #c0392b;
+  color: white;
+}
+
+.opponent-goal-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 8px 0 4px;
+}
+
+.opponent-goal-counter span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a5632;
+  min-width: 36px;
+  text-align: center;
+}
+
+.btn-counter {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-counter:active {
+  background: #e0e0e0;
+}
+
+.edit-game-actions {
+  margin-top: 20px;
+}
+
+#edit-game-goals:empty::after {
+  content: "No goals";
+  display: block;
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.edit-goal-labels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.edit-goal-labels span {
+  flex: 1;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.edit-goal-labels span:last-child {
+  min-width: 36px;
+  max-width: 36px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive: very small phones */
+@media (max-width: 360px) {
+  .player-btn {
+    padding: 14px 6px;
+    font-size: 0.95rem;
+    min-height: 56px;
+  }
+
+  .assist-btn {
+    padding: 12px 6px;
+    font-size: 0.9rem;
+  }
+}

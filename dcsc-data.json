@@ -1,0 +1,975 @@
+{
+  "teamName": "DCSC Pre-ECNL Boys 2015",
+  "season": "2025-2026 Season",
+  "roster": [
+    {
+      "id": 1,
+      "name": "Ollie"
+    },
+    {
+      "id": 2,
+      "name": "Paul"
+    },
+    {
+      "id": 3,
+      "name": "Declan"
+    },
+    {
+      "id": 4,
+      "name": "Jack"
+    },
+    {
+      "id": 5,
+      "name": "Jackson"
+    },
+    {
+      "id": 6,
+      "name": "William"
+    },
+    {
+      "id": 7,
+      "name": "Leone"
+    },
+    {
+      "id": 8,
+      "name": "Bruno"
+    },
+    {
+      "id": 9,
+      "name": "Charlie"
+    },
+    {
+      "id": 10,
+      "name": "Jasper"
+    },
+    {
+      "id": 11,
+      "name": "Martin"
+    },
+    {
+      "id": 12,
+      "name": "Brenan"
+    },
+    {
+      "id": 13,
+      "name": "Brooks"
+    },
+    {
+      "id": 14,
+      "name": "Ithaca"
+    },
+    {
+      "id": 15,
+      "name": "Own Goal"
+    }
+  ],
+  "games": [
+    {
+      "id": "game_1",
+      "date": "2025-09-06",
+      "opponent": "VSA Pre-ECNL",
+      "goalsFor": 0,
+      "goalsAgainst": 5,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_2",
+      "date": "2025-09-13",
+      "opponent": "VSA VDA West",
+      "goalsFor": 1,
+      "goalsAgainst": 6,
+      "result": "L",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 4,
+          "assistPlayerId": 8
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_3",
+      "date": "2025-09-20",
+      "opponent": "Potomac",
+      "goalsFor": 5,
+      "goalsAgainst": 3,
+      "result": "W",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 8
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "goal",
+          "playerId": 4,
+          "assistPlayerId": 5
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 1
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_4",
+      "date": "2025-09-21",
+      "opponent": "VRSC Pre-MLS Next",
+      "goalsFor": 6,
+      "goalsAgainst": 2,
+      "result": "W",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 1
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 1
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_5",
+      "date": "2025-09-22",
+      "opponent": "VSA",
+      "goalsFor": 0,
+      "goalsAgainst": 4,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_6",
+      "date": "2025-10-04",
+      "opponent": "BRYC Elite Academy",
+      "goalsFor": 2,
+      "goalsAgainst": 1,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 9
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_7",
+      "date": "2025-10-18",
+      "opponent": "Beach FC",
+      "goalsFor": 3,
+      "goalsAgainst": 4,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": 7
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 10
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_8",
+      "date": "2025-11-01",
+      "opponent": "Great Falls Reston SC",
+      "goalsFor": 7,
+      "goalsAgainst": 2,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 8
+        },
+        {
+          "type": "goal",
+          "playerId": 4,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "goal",
+          "playerId": 10,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 10,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 4
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 9,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_9",
+      "date": "2025-11-15",
+      "opponent": "RU RED Pre ECNL",
+      "goalsFor": 2,
+      "goalsAgainst": 6,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": 5
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_10",
+      "date": "2025-11-22",
+      "opponent": "Stafford Revolution",
+      "goalsFor": 4,
+      "goalsAgainst": 1,
+      "result": "W",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 7
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 12
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_11",
+      "date": "2025-12-06",
+      "opponent": "Virginia Valor DC",
+      "goalsFor": 3,
+      "goalsAgainst": 4,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 4
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": 8
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_12",
+      "date": "2025-12-13",
+      "opponent": "PPA Blue",
+      "goalsFor": 7,
+      "goalsAgainst": 1,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": 5
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 10
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 9
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 13
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_13",
+      "date": "2026-01-10",
+      "opponent": "MSI 2015 Gold",
+      "goalsFor": 2,
+      "goalsAgainst": 3,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 13,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": null
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_14",
+      "date": "2026-01-17",
+      "opponent": "MSI 2016 Gold",
+      "goalsFor": 17,
+      "goalsAgainst": 3,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 11
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 11
+        },
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": 11
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 12
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 9
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": 9
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": 1
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 5
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 14
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 13,
+          "assistPlayerId": null
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_15",
+      "date": "2026-01-24",
+      "opponent": "PPA Blue",
+      "goalsFor": 1,
+      "goalsAgainst": 0,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 10,
+          "assistPlayerId": null
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "id": "game_16",
+      "date": "2026-02-07",
+      "opponent": "SOCA Blue",
+      "goalsFor": 3,
+      "goalsAgainst": 8,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 11
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    }
+  ],
+  "exportedAt": "2026-03-09T19:30:24.109Z"
+}
