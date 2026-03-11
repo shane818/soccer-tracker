@@ -10,8 +10,8 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f5f5f5;
+  font-family: Calibri, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F2F4F8;
   color: #1a1a1a;
   padding-bottom: 80px;
   min-height: 100dvh;
@@ -20,13 +20,14 @@ body {
 
 /* Header */
 #app-header {
-  background: #1a5632;
+  background: #1E1F4D;
   color: white;
   padding: 16px 20px 12px;
   text-align: center;
 }
 
 #app-header h1 {
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -62,8 +63,8 @@ body {
 }
 
 .tab-btn.active {
-  color: #1a5632;
-  border-top: 3px solid #1a5632;
+  color: #2B2D6B;
+  border-top: 3px solid #2B2D6B;
   padding-top: 11px;
 }
 
@@ -98,7 +99,7 @@ body {
 }
 
 .btn-primary {
-  background: #1a5632;
+  background: #2B2D6B;
   color: white;
 }
 
@@ -108,7 +109,7 @@ body {
 }
 
 .btn-danger {
-  background: #c0392b;
+  background: #C41E3A;
   color: white;
 }
 
@@ -141,7 +142,7 @@ body {
 .record-line {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a5632;
+  color: #2B2D6B;
   margin-top: 4px;
 }
 
@@ -188,8 +189,8 @@ body {
   font-weight: 700;
 }
 
-.result-W { color: #27ae60; }
-.result-L { color: #c0392b; }
+.result-W { color: #16A34A; }
+.result-L { color: #C41E3A; }
 .result-D { color: #f39c12; }
 
 .game-details {
@@ -240,7 +241,7 @@ body {
 
 .stats-toggle-btn.active {
   background: white;
-  color: #1a5632;
+  color: #2B2D6B;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
@@ -263,7 +264,7 @@ body {
 }
 
 .stats-table th {
-  background: #1a5632;
+  background: #2B2D6B;
   color: white;
   padding: 10px 8px;
   font-size: 0.8rem;
@@ -274,11 +275,11 @@ body {
 }
 
 .stats-table th.sortable:hover {
-  background: #247040;
+  background: #3a3c8a;
 }
 
 .stats-table th.sorted {
-  background: #247040;
+  background: #3a3c8a;
 }
 
 .stats-table th.sorted::after {
@@ -322,7 +323,7 @@ body {
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a5632;
+  color: #2B2D6B;
 }
 
 .stat-label {
@@ -369,7 +370,7 @@ body {
 }
 
 .roster-actions .delete-btn {
-  color: #c0392b;
+  color: #C41E3A;
 }
 
 #add-player-btn {
@@ -406,8 +407,8 @@ body {
   min-height: 1.2em;
 }
 
-#sync-status.success { color: #27ae60; }
-#sync-status.error { color: #c0392b; }
+#sync-status.success { color: #16A34A; }
+#sync-status.error { color: #C41E3A; }
 #sync-status.syncing { color: #888; }
 
 #token-controls {
@@ -426,14 +427,14 @@ body {
 }
 
 .btn-link:active {
-  color: #c0392b;
+  color: #C41E3A;
 }
 
 /* Game Overlay */
 #game-overlay {
   position: fixed;
   inset: 0;
-  background: #f5f5f5;
+  background: #F2F4F8;
   z-index: 200;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -457,7 +458,7 @@ body {
   font-size: 1.3rem;
   margin-bottom: 20px;
   text-align: center;
-  color: #1a5632;
+  color: #2B2D6B;
 }
 
 .overlay-screen h3 {
@@ -488,7 +489,7 @@ body {
 }
 
 .form-group input:focus {
-  border-color: #1a5632;
+  border-color: #2B2D6B;
 }
 
 .overlay-actions {
@@ -522,12 +523,12 @@ body {
 .attendance-item input[type="checkbox"] {
   width: 24px;
   height: 24px;
-  accent-color: #1a5632;
+  accent-color: #2B2D6B;
 }
 
 /* Scoreboard */
 #scoreboard {
-  background: #1a5632;
+  background: #2B2D6B;
   color: white;
   border-radius: 12px;
   padding: 16px;
@@ -566,7 +567,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #27ae60;
+  background: #C41E3A;
   color: white;
   font-size: 2.5rem;
   font-weight: 800;
@@ -597,12 +598,12 @@ body {
 
 .player-btn {
   background: white;
-  border: 2px solid #1a5632;
+  border: 2px solid #2B2D6B;
   border-radius: 12px;
   padding: 18px 8px;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #1a5632;
+  color: #2B2D6B;
   cursor: pointer;
   text-align: center;
   min-height: 64px;
@@ -612,7 +613,7 @@ body {
 }
 
 .player-btn:active {
-  background: #1a5632;
+  background: #2B2D6B;
   color: white;
 }
 
@@ -666,7 +667,7 @@ body {
   font-size: 1.2rem;
   margin-bottom: 16px;
   text-align: center;
-  color: #1a5632;
+  color: #2B2D6B;
 }
 
 .modal-content p {
@@ -694,18 +695,18 @@ body {
 
 .assist-btn {
   background: white;
-  border: 2px solid #1a5632;
+  border: 2px solid #2B2D6B;
   border-radius: 10px;
   padding: 14px 8px;
   font-size: 1rem;
   font-weight: 600;
-  color: #1a5632;
+  color: #2B2D6B;
   cursor: pointer;
   text-align: center;
 }
 
 .assist-btn:active {
-  background: #1a5632;
+  background: #2B2D6B;
   color: white;
 }
 
@@ -752,7 +753,7 @@ body {
 }
 
 .edit-goal-row select:focus {
-  border-color: #1a5632;
+  border-color: #2B2D6B;
   outline: none;
 }
 
@@ -763,7 +764,7 @@ body {
   padding: 0;
   border: none;
   background: #f5e6e6;
-  color: #c0392b;
+  color: #C41E3A;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 700;
@@ -774,7 +775,7 @@ body {
 }
 
 .edit-goal-row .btn-remove:active {
-  background: #c0392b;
+  background: #C41E3A;
   color: white;
 }
 
@@ -789,7 +790,7 @@ body {
 .opponent-goal-counter span {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1a5632;
+  color: #2B2D6B;
   min-width: 36px;
   text-align: center;
 }

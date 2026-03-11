@@ -189,7 +189,7 @@ function renderGamesTab() {
       return `<div class="goal-event"><span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
     }).join('');
     const oppGoals = (g.events || []).filter(e => e.type === 'opponent_goal').length;
-    const oppLine = oppGoals > 0 ? `<div class="goal-event" style="color:#c0392b">${g.opponent}: ${oppGoals} goal${oppGoals > 1 ? 's' : ''}</div>` : '';
+    const oppLine = oppGoals > 0 ? `<div class="goal-event" style="color:#C41E3A">${g.opponent}: ${oppGoals} goal${oppGoals > 1 ? 's' : ''}</div>` : '';
 
     return `
       <div class="game-card" onclick="toggleGameDetail(this)">
