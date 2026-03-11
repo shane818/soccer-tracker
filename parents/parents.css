@@ -1,0 +1,21 @@
+/* ============================================
+   DCSC Soccer Tracker — Parent View Overrides
+   Base styles loaded from ../styles.css
+   ============================================ */
+
+/* Hide admin-only elements */
+#game-action-btn {
+  display: none;
+}
+
+.game-actions {
+  display: none !important;
+}
+
+/* Last updated footer */
+#last-updated {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6B7280;
+  padding: 16px 0 24px;
+}
