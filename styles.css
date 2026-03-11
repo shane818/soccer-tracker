@@ -393,6 +393,42 @@ body {
   cursor: pointer;
 }
 
+.data-controls + .data-controls {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+#sync-status {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  min-height: 1.2em;
+}
+
+#sync-status.success { color: #27ae60; }
+#sync-status.error { color: #c0392b; }
+#sync-status.syncing { color: #888; }
+
+#token-controls {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.btn-link:active {
+  color: #c0392b;
+}
+
 /* Game Overlay */
 #game-overlay {
   position: fixed;

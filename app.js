@@ -739,6 +739,94 @@ function deleteGame() {
 }
 
 // ============================================
+// 6c. GITHUB SYNC
+// ============================================
+const GITHUB_REPO = 'shane818/soccer-tracker';
+const GITHUB_FILE = 'dcsc-data.json';
+
+function getGitHubToken() {
+  return localStorage.getItem('ghToken') || null;
+}
+
+function setGitHubToken(token) {
+  localStorage.setItem('ghToken', token);
+}
+
+function forgetGitHubToken() {
+  localStorage.removeItem('ghToken');
+  setSyncStatus('Token removed', '');
+}
+
+function setSyncStatus(msg, type) {
+  const el = document.getElementById('sync-status');
+  el.textContent = msg;
+  el.className = type;
+}
+
+async function syncToGitHub() {
+  let token = getGitHubToken();
+  if (!token) {
+    token = prompt('Enter your GitHub Personal Access Token.\n\nCreate one at:\ngithub.com/settings/personal-access-tokens/new\n\nScope: soccer-tracker repo → Contents: Read & Write');
+    if (!token || !token.trim()) return;
+    setGitHubToken(token.trim());
+    token = token.trim();
+  }
+
+  setSyncStatus('Syncing...', 'syncing');
+
+  const data = {
+    teamName: getTeamName(),
+    season: getSeason(),
+    roster: getRoster(),
+    games: getGames(),
+    exportedAt: new Date().toISOString()
+  };
+  const json = JSON.stringify(data, null, 2);
+  const content = btoa(unescape(encodeURIComponent(json)));
+
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    // Step 1: Get current file SHA
+    const getResp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, { headers });
+    if (getResp.status === 401) {
+      forgetGitHubToken();
+      setSyncStatus('Invalid token. Tap Sync to re-enter.', 'error');
+      return;
+    }
+    if (!getResp.ok) {
+      setSyncStatus('Error reading repo: ' + getResp.status, 'error');
+      return;
+    }
+    const fileData = await getResp.json();
+
+    // Step 2: Update the file
+    const putResp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: 'Update game data (' + data.games.length + ' games)',
+        content,
+        sha: fileData.sha
+      })
+    });
+
+    if (putResp.ok) {
+      setSyncStatus('Synced! Site updates in ~30s.', 'success');
+    } else {
+      const err = await putResp.json();
+      setSyncStatus('Sync failed: ' + (err.message || putResp.status), 'error');
+    }
+  } catch (e) {
+    setSyncStatus('Network error. Check connection.', 'error');
+  }
+}
+
+// ============================================
 // 7. DATA EXPORT / IMPORT
 // ============================================
 function exportData() {
@@ -864,6 +952,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Delete game confirmation
   document.getElementById('delete-game-cancel').addEventListener('click', cancelDeleteGame);
   document.getElementById('delete-game-ok').addEventListener('click', deleteGame);
+
+  // GitHub sync
+  document.getElementById('sync-github-btn').addEventListener('click', syncToGitHub);
+  document.getElementById('forget-token-btn').addEventListener('click', () => {
+    if (confirm('Remove saved GitHub token?')) forgetGitHubToken();
+  });
 
   // Data export/import
   document.getElementById('export-data-btn').addEventListener('click', exportData);

@@ -43,9 +43,16 @@
       <div id="roster-list"></div>
       <button id="add-player-btn" class="btn btn-primary">+ Add Player</button>
       <div class="data-controls">
+        <button id="sync-github-btn" class="btn btn-primary btn-full">Sync to GitHub</button>
+        <div id="sync-status"></div>
+      </div>
+      <div class="data-controls">
         <button id="export-data-btn" class="btn btn-secondary btn-full">Export Data</button>
         <label class="btn btn-secondary btn-full" for="import-file">Import Data</label>
         <input type="file" id="import-file" accept=".json" style="display:none">
+      </div>
+      <div id="token-controls">
+        <button id="forget-token-btn" class="btn-link">Forget GitHub Token</button>
       </div>
     </section>
   </main>
