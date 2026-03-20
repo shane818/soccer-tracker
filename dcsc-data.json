@@ -1066,7 +1066,67 @@
         14,
         15
       ]
+    },
+    {
+      "id": "game_1774043076325",
+      "date": "2026-03-20",
+      "opponent": "Alex 2015 Boys Red",
+      "goalsFor": 2,
+      "goalsAgainst": 8,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
     }
   ],
-  "exportedAt": "2026-03-14T13:15:02.067Z"
+  "exportedAt": "2026-03-20T23:56:33.888Z"
 }
