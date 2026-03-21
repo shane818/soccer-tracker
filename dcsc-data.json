@@ -1160,8 +1160,8 @@
         },
         {
           "type": "goal",
-          "playerId": 8,
-          "assistPlayerId": null
+          "playerId": 12,
+          "assistPlayerId": 8
         },
         {
           "type": "opponent_goal"
