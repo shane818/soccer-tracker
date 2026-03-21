@@ -1076,18 +1076,9 @@
       "result": "L",
       "events": [
         {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
           "type": "goal",
           "playerId": 8,
           "assistPlayerId": null
-        },
-        {
-          "type": "opponent_goal"
         },
         {
           "type": "goal",
@@ -1108,6 +1099,20 @@
         },
         {
           "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "red_card",
+          "team": "dcsc",
+          "playerId": 11
         }
       ],
       "playersPresent": [
@@ -1186,5 +1191,5 @@
       ]
     }
   ],
-  "exportedAt": "2026-03-21T19:24:46.908Z"
+  "exportedAt": "2026-03-21T23:41:28.870Z"
 }
