@@ -38,6 +38,10 @@ function computePlayerStats(games, roster) {
     stats[p.id] = { playerId: p.id, name: p.name, goals: 0, assists: 0, gamesPlayed: 0 };
   });
   games.forEach(g => {
+    // Add guest players to stats if not already there
+    (g.guestPlayers || []).forEach(p => {
+      if (!stats[p.id]) stats[p.id] = { playerId: p.id, name: p.name, goals: 0, assists: 0, gamesPlayed: 0 };
+    });
     (g.playersPresent || []).forEach(pid => {
       if (stats[pid]) stats[pid].gamesPlayed++;
     });
@@ -54,6 +58,37 @@ function computePlayerStats(games, roster) {
 function formatDate(dateStr) {
   const d = new Date(dateStr + 'T12:00:00');
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ============================================
+// 1b. EVENT RENDERING
+// ============================================
+function renderEventLine(e, rosterMap, opponent) {
+  if (e.type === 'goal') {
+    const scorer = rosterMap[e.playerId] || '?';
+    const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
+    return `<div class="goal-event"><span class="event-icon">⚽</span> <span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+  } else if (e.type === 'opponent_goal') {
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${opponent}</div>`;
+  } else if (e.type === 'yellow_card') {
+    const who = cardRecipientLabel(e, rosterMap, opponent);
+    return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${who}</div>`;
+  } else if (e.type === 'red_card') {
+    const who = cardRecipientLabel(e, rosterMap, opponent);
+    const note = e.secondYellow ? ' (2nd yellow)' : '';
+    return `<div class="goal-event card-event red"><span class="event-icon">🟥</span> ${who}${note}</div>`;
+  }
+  return '';
+}
+
+function cardRecipientLabel(e, rosterMap, opponent) {
+  if (e.team === 'dcsc') {
+    if (e.isCoach) return 'DCSC Coach';
+    return rosterMap[e.playerId] || '?';
+  } else {
+    if (e.isCoach) return `${opponent} Coach`;
+    return e.jersey ? `${opponent} #${e.jersey}` : opponent;
+  }
 }
 
 // ============================================
@@ -88,8 +123,8 @@ function renderGamesTab() {
   }
 
   // Build roster lookup
-  const rosterMap = {};
-  roster.forEach(p => rosterMap[p.id] = p.name);
+  const baseRosterMap = {};
+  roster.forEach(p => baseRosterMap[p.id] = p.name);
 
   // Games list
   const listEl = document.getElementById('games-list');
@@ -99,14 +134,13 @@ function renderGamesTab() {
   }
 
   listEl.innerHTML = [...games].reverse().map(g => {
-    const goalEvents = (g.events || []).filter(e => e.type === 'goal');
-    const detailLines = goalEvents.map(e => {
-      const scorer = rosterMap[e.playerId] || '?';
-      const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
-      return `<div class="goal-event"><span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
-    }).join('');
-    const oppGoals = (g.events || []).filter(e => e.type === 'opponent_goal').length;
-    const oppLine = oppGoals > 0 ? `<div class="goal-event" style="color:#C41E3A">${g.opponent}: ${oppGoals} goal${oppGoals > 1 ? 's' : ''}</div>` : '';
+    // Build per-game roster map including guests
+    const rosterMap = { ...baseRosterMap };
+    (g.guestPlayers || []).forEach(p => rosterMap[p.id] = p.name);
+
+    const events = g.events || [];
+    const detailLines = events.map(e => renderEventLine(e, rosterMap, g.opponent)).join('');
+    const hasEvents = events.length > 0;
 
     return `
       <div class="game-card" onclick="toggleGameDetail(this)">
@@ -118,7 +152,7 @@ function renderGamesTab() {
           <div class="game-score result-${g.result}">${g.result} ${g.goalsFor}-${g.goalsAgainst}</div>
         </div>
         <div class="game-details">
-          ${detailLines}${oppLine}${goalEvents.length === 0 && oppGoals === 0 ? '<div style="color:#999">No goals recorded</div>' : ''}
+          ${hasEvents ? detailLines : '<div style="color:#999">No events recorded</div>'}
         </div>
       </div>
     `;

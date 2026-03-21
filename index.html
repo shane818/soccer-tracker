@@ -75,6 +75,9 @@
       </div>
       <h3>Who's playing today?</h3>
       <div id="attendance-list"></div>
+      <h3>Guest Players</h3>
+      <div id="guest-list"></div>
+      <button id="add-guest-btn" class="btn btn-secondary btn-full" style="margin-bottom:16px">+ Add Guest Player</button>
       <div class="overlay-actions">
         <button id="cancel-game-btn" class="btn btn-secondary">Cancel</button>
         <button id="kickoff-btn" class="btn btn-primary">Kick Off!</button>
@@ -99,6 +102,7 @@
       <div id="player-grid"></div>
       <div class="game-controls">
         <button id="opponent-goal-btn" class="btn btn-danger">Opponent Goal</button>
+        <button id="card-btn" class="btn btn-card">Card</button>
         <button id="undo-btn" class="btn btn-secondary">Undo</button>
       </div>
       <div class="game-controls">
@@ -115,6 +119,60 @@
       <h3 id="assist-title">Who assisted?</h3>
       <div id="assist-grid"></div>
       <button id="no-assist-btn" class="btn btn-secondary btn-full">No Assist</button>
+    </div>
+  </div>
+
+  <!-- Card Modal (multi-step) -->
+  <div id="card-modal" class="hidden">
+    <div class="modal-content">
+      <!-- Step 1: Which team -->
+      <div id="card-step-team" class="card-step">
+        <h3>Issue Card</h3>
+        <div class="card-team-btns">
+          <button class="btn btn-primary btn-full" onclick="cardSelectTeam('dcsc')">DCSC</button>
+          <button class="btn btn-danger btn-full" id="card-opp-btn" onclick="cardSelectTeam('opponent')">Opponent</button>
+        </div>
+        <button class="btn btn-secondary btn-full" onclick="cancelCard()" style="margin-top:12px">Cancel</button>
+      </div>
+
+      <!-- Step 2: Card type -->
+      <div id="card-step-type" class="card-step hidden">
+        <h3>Card Type</h3>
+        <div class="card-type-btns">
+          <button class="btn btn-full card-yellow-btn" onclick="cardSelectType('yellow')">Yellow Card</button>
+          <button class="btn btn-full card-red-btn" onclick="cardSelectType('red')">Red Card</button>
+        </div>
+        <button class="btn btn-secondary btn-full" onclick="cardBackToTeam()" style="margin-top:12px">Back</button>
+      </div>
+
+      <!-- Step 3a: DCSC player selection -->
+      <div id="card-step-dcsc-player" class="card-step hidden">
+        <h3 id="card-dcsc-title">Who received the card?</h3>
+        <div id="card-player-grid"></div>
+        <button class="btn btn-secondary btn-full" onclick="cardSelectDcscCoach()">Coach</button>
+        <button class="btn btn-secondary btn-full" onclick="cardBackToType()" style="margin-top:8px">Back</button>
+      </div>
+
+      <!-- Step 3b: Opponent player selection -->
+      <div id="card-step-opp-player" class="card-step hidden">
+        <h3 id="card-opp-title">Opponent jersey # (optional)</h3>
+        <div class="form-group">
+          <input type="text" id="card-jersey-input" placeholder="Jersey number" inputmode="numeric" autocomplete="off">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="cardSubmitOpponent()">Done</button>
+        <button class="btn btn-secondary btn-full" onclick="cardSelectOppCoach()" style="margin-top:8px">Coach</button>
+        <button class="btn btn-secondary btn-full" onclick="cardBackToType()" style="margin-top:8px">Back</button>
+      </div>
+
+      <!-- Step 4: Opponent 2nd yellow confirmation -->
+      <div id="card-step-second-yellow" class="card-step hidden">
+        <h3 id="card-2nd-title">2nd yellow for this player?</h3>
+        <p id="card-2nd-info"></p>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="cardConfirmSecondYellow(false)">No, just yellow</button>
+          <button class="btn btn-danger" onclick="cardConfirmSecondYellow(true)">Yes, Red Card</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -166,6 +224,9 @@
         <span id="edit-opponent-goals">0</span>
         <button class="btn btn-counter" id="opp-goal-plus">+</button>
       </div>
+      <h4 class="edit-section-label">Cards</h4>
+      <div id="edit-game-cards"></div>
+      <button id="edit-add-card-btn" class="btn btn-secondary btn-full" style="margin-top:8px">+ Add Card</button>
       <div class="modal-actions edit-game-actions">
         <button id="edit-game-cancel" class="btn btn-secondary">Cancel</button>
         <button id="edit-game-delete" class="btn btn-danger">Delete</button>

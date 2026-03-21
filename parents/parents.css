@@ -12,6 +12,15 @@
   display: none !important;
 }
 
+/* Event display */
+.event-icon {
+  font-size: 0.85rem;
+}
+
+.opp-event {
+  color: #C41E3A;
+}
+
 /* Last updated footer */
 #last-updated {
   text-align: center;

@@ -526,6 +526,44 @@ body {
   accent-color: #2B2D6B;
 }
 
+/* Guest Players */
+.guest-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.guest-item input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.guest-item input:focus {
+  border-color: #2B2D6B;
+}
+
+.guest-item .btn-remove {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border: none;
+  background: #f5e6e6;
+  color: #C41E3A;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Scoreboard */
 #scoreboard {
   background: #2B2D6B;
@@ -632,6 +670,7 @@ body {
 
 /* Modals (Assist, End Game, Edit Player, Edit Game, Delete Game) */
 #assist-modal,
+#card-modal,
 #endgame-confirm,
 #edit-player-modal,
 #edit-game-modal,
@@ -646,6 +685,7 @@ body {
 }
 
 #assist-modal.hidden,
+#card-modal.hidden,
 #endgame-confirm.hidden,
 #edit-player-modal.hidden,
 #edit-game-modal.hidden,
@@ -845,6 +885,50 @@ body {
 .edit-goal-labels span:last-child {
   min-width: 36px;
   max-width: 36px;
+}
+
+/* Card Button */
+.btn-card {
+  background: #D4A017;
+  color: white;
+}
+
+/* Card Modal Steps */
+.card-step.hidden {
+  display: none;
+}
+
+.card-team-btns,
+.card-type-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-yellow-btn {
+  background: #D4A017;
+  color: white;
+}
+
+.card-red-btn {
+  background: #C41E3A;
+  color: white;
+}
+
+#card-player-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Event display in game details */
+.event-icon {
+  font-size: 0.85rem;
+}
+
+.opp-event {
+  color: #C41E3A;
 }
 
 /* Empty State */
