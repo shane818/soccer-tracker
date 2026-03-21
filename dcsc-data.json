@@ -1126,7 +1126,65 @@
         14,
         15
       ]
+    },
+    {
+      "id": "game_1774117272299",
+      "date": "2026-03-21",
+      "opponent": "SYC 2015B Blue",
+      "goalsFor": 2,
+      "goalsAgainst": 7,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 10,
+          "assistPlayerId": 3
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": null
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
     }
   ],
-  "exportedAt": "2026-03-20T23:56:33.888Z"
+  "exportedAt": "2026-03-21T19:24:46.908Z"
 }
