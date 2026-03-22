@@ -1040,7 +1040,7 @@
     {
       "id": "game_1773489506445",
       "date": "2026-03-14",
-      "opponent": "SYC 2015B Pre-MLS Next II",
+      "opponent": "Springfield SYC Soccer SYC 2015B Pre-MLS Next II",
       "goalsFor": 0,
       "goalsAgainst": 1,
       "result": "L",
@@ -1189,7 +1189,41 @@
         14,
         15
       ]
+    },
+    {
+      "id": "game_1774189933514",
+      "date": "2026-03-22",
+      "opponent": "McLean Youth Soccer 2015 Boys Green",
+      "goalsFor": 0,
+      "goalsAgainst": 2,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": []
     }
   ],
-  "exportedAt": "2026-03-22T04:02:16.722Z"
+  "exportedAt": "2026-03-22T15:37:47.802Z"
 }
