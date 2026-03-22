@@ -63,13 +63,15 @@ function formatDate(dateStr) {
 // ============================================
 // 1b. EVENT RENDERING
 // ============================================
-function renderEventLine(e, rosterMap, opponent) {
+function renderEventLine(e, rosterMap, opponent, score) {
   if (e.type === 'goal') {
     const scorer = rosterMap[e.playerId] || '?';
     const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
-    return `<div class="goal-event"><span class="event-icon">⚽</span> <span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+    const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
+    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
   } else if (e.type === 'opponent_goal') {
-    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${opponent}</div>`;
+    const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${opponent}</div>`;
   } else if (e.type === 'yellow_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
     return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${who}</div>`;
@@ -139,7 +141,13 @@ function renderGamesTab() {
     (g.guestPlayers || []).forEach(p => rosterMap[p.id] = p.name);
 
     const events = g.events || [];
-    const detailLines = events.map(e => renderEventLine(e, rosterMap, g.opponent)).join('');
+    let runDCSC = 0, runOpp = 0;
+    const detailLines = events.map(e => {
+      let score = null;
+      if (e.type === 'goal') { runDCSC++; score = `${runDCSC}-${runOpp}`; }
+      else if (e.type === 'opponent_goal') { runOpp++; score = `${runDCSC}-${runOpp}`; }
+      return renderEventLine(e, rosterMap, g.opponent, score);
+    }).join('');
     const hasEvents = events.length > 0;
 
     return `

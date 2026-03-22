@@ -927,6 +927,16 @@ body {
   font-size: 0.85rem;
 }
 
+.event-score {
+  font-weight: 700;
+  color: #2B2D6B;
+  font-size: 0.9rem;
+}
+
+.opp-event .event-score {
+  color: #C41E3A;
+}
+
 .opp-event {
   color: #C41E3A;
 }
