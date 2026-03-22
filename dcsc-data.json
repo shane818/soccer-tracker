@@ -1040,7 +1040,7 @@
     {
       "id": "game_1773489506445",
       "date": "2026-03-14",
-      "opponent": "Springfield SYC Soccer SYC 2015B Pre-MLS Next II",
+      "opponent": "SYC 2015B Pre-MLS Next II",
       "goalsFor": 0,
       "goalsAgainst": 1,
       "result": "L",
@@ -1191,5 +1191,5 @@
       ]
     }
   ],
-  "exportedAt": "2026-03-22T01:24:30.813Z"
+  "exportedAt": "2026-03-22T04:01:30.164Z"
 }
