@@ -627,7 +627,6 @@ function finalizeGame() {
   document.getElementById('game-overlay').classList.add('hidden');
   document.getElementById('ingame-view').classList.add('hidden');
 
-  exportData();
   switchTab('games');
 }
 
@@ -810,7 +809,6 @@ function saveEditGame() {
 
   saveGames(games);
   document.getElementById('edit-game-modal').classList.add('hidden');
-  exportData();
   switchTab('games');
 }
 
@@ -841,7 +839,6 @@ function deleteGame() {
   document.getElementById('delete-game-confirm').classList.add('hidden');
   document.getElementById('edit-game-modal').classList.add('hidden');
   editingGameId = null;
-  exportData();
   switchTab('games');
 }
 
