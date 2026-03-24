@@ -11,6 +11,22 @@ let editOpponentGoalCount = 0;
 let guestPlayers = [];  // [{ id: -1, name: 'Guest Name' }, ...]
 let nextGuestId = -1;
 
+// Timer state
+let timerInterval = null;
+let timerStartedAt = null;
+let timerElapsed = 0;  // accumulated seconds
+
+// PK state
+let pkTotalKicks = 5;
+let pkRound = 1;
+let pkTeamTurn = 'dcsc';  // alternates
+let pkScoreDCSC = 0;
+let pkScoreOpp = 0;
+let pkTakenDCSC = 0;
+let pkTakenOpp = 0;
+let pkSuddenDeath = false;
+let pendingPkPlayerId = null;
+
 // ============================================
 // 2. DATA LAYER (localStorage CRUD)
 // ============================================
@@ -153,21 +169,28 @@ function renderHeader() {
 }
 
 function renderEventLine(e, rosterMap, opponent, score) {
+  const min = e.minute ? `<span class="event-minute">${e.minute}</span> ` : '';
   if (e.type === 'goal') {
     const scorer = rosterMap[e.playerId] || '?';
     const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
   } else if (e.type === 'opponent_goal') {
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${opponent}</div>`;
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}</div>`;
   } else if (e.type === 'yellow_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
-    return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${who}</div>`;
+    return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${min}${who}</div>`;
   } else if (e.type === 'red_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
     const note = e.secondYellow ? ' (2nd yellow)' : '';
-    return `<div class="goal-event card-event red"><span class="event-icon">🟥</span> ${who}${note}</div>`;
+    return `<div class="goal-event card-event red"><span class="event-icon">🟥</span> ${min}${who}${note}</div>`;
+  } else if (e.type === 'pk_goal') {
+    const who = e.team === 'dcsc' ? (rosterMap[e.playerId] || 'DCSC') : opponent;
+    return `<div class="goal-event pk-event"><span class="event-icon">⚽</span> PK ${who}</div>`;
+  } else if (e.type === 'pk_miss') {
+    const who = e.team === 'dcsc' ? (rosterMap[e.playerId] || 'DCSC') : opponent;
+    return `<div class="goal-event pk-event pk-miss"><span class="event-icon">✕</span> PK ${who}</div>`;
   }
   return '';
 }
@@ -239,7 +262,7 @@ function renderGamesTab() {
             <div class="game-date">${formatDate(g.date)}</div>
             <div class="game-matchup">vs ${g.opponent}</div>
           </div>
-          <div class="game-score result-${g.result}">${g.result} ${g.goalsFor}-${g.goalsAgainst}</div>
+          <div class="game-score result-${g.result}">${g.result} ${g.goalsFor}-${g.goalsAgainst}${g.pkScore ? ` (${g.pkScore.dcsc}-${g.pkScore.opponent})` : ''}</div>
         </div>
         <div class="game-details">
           ${hasEvents ? detailLines : '<div style="color:#999">No events recorded</div>'}
@@ -354,6 +377,108 @@ function renderRosterTab() {
 }
 
 // ============================================
+// 4b. TIMER
+// ============================================
+function startTimer() {
+  timerStartedAt = Date.now();
+  timerInterval = setInterval(updateTimerDisplay, 1000);
+  updateTimerDisplay();
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  if (timerStartedAt) {
+    timerElapsed += Math.floor((Date.now() - timerStartedAt) / 1000);
+    timerStartedAt = null;
+  }
+}
+
+function resetTimer() {
+  stopTimer();
+  timerElapsed = 0;
+  updateTimerDisplay();
+}
+
+function getElapsedSeconds() {
+  let total = timerElapsed;
+  if (timerStartedAt) total += Math.floor((Date.now() - timerStartedAt) / 1000);
+  return total;
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('game-timer');
+  if (!el) return;
+  const game = getActiveGame();
+  if (!game) return;
+  const halfLen = game.halfLength || 25;
+  const phase = game.phase || 'regulation';
+  const currentHalfLen = phase === 'overtime' ? (game.otHalfLength || 10) : halfLen;
+  const elapsed = getElapsedSeconds();
+  el.textContent = formatTimer(elapsed, currentHalfLen);
+  el.classList.toggle('timer-extra', elapsed >= currentHalfLen * 60);
+}
+
+function formatTimer(totalSeconds, halfLength) {
+  const halfSecs = halfLength * 60;
+  if (totalSeconds < halfSecs) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  } else {
+    const extra = totalSeconds - halfSecs;
+    const em = Math.floor(extra / 60);
+    const es = extra % 60;
+    return `${halfLength}+${em}:${es < 10 ? '0' : ''}${es}`;
+  }
+}
+
+function getCurrentMinute() {
+  const game = getActiveGame();
+  if (!game) return '';
+  const phase = game.phase || 'regulation';
+  if (phase === 'penalties') return 'PK';
+
+  const halfLen = game.halfLength || 25;
+  const elapsed = getElapsedSeconds();
+  const elapsedMin = Math.floor(elapsed / 60);
+
+  let offset = 0;
+  let currentHalfLen = halfLen;
+
+  if (phase === 'regulation') {
+    if (game.half === 2) offset = halfLen;
+  } else if (phase === 'overtime') {
+    const otLen = game.otHalfLength || 10;
+    currentHalfLen = otLen;
+    offset = halfLen * 2;
+    if (game.half === 2) offset += otLen;
+  }
+
+  if (elapsed >= currentHalfLen * 60) {
+    const extra = elapsedMin - currentHalfLen;
+    return `${offset + currentHalfLen}+${extra + 1}'`;
+  }
+  return `${offset + elapsedMin}'`;
+}
+
+function saveTimerState() {
+  const game = getActiveGame();
+  if (!game) return;
+  game.timerElapsed = getElapsedSeconds();
+  saveActiveGame(game);
+}
+
+function restoreTimerState() {
+  const game = getActiveGame();
+  if (!game) return;
+  timerElapsed = game.timerElapsed || 0;
+  timerStartedAt = null;
+}
+
+// ============================================
 // 5. GAME FLOW
 // ============================================
 function showPregame() {
@@ -443,6 +568,8 @@ function kickOff() {
   const guestIds = validGuests.map(g => g.id);
   const allPresent = present.concat(guestIds);
 
+  const halfLength = parseInt(document.getElementById('half-length-select').value) || 25;
+
   const game = {
     id: 'game_' + Date.now(),
     date: new Date().toISOString().slice(0, 10),
@@ -451,29 +578,41 @@ function kickOff() {
     events: [],
     playersPresent: allPresent,
     guestPlayers: validGuests.map(g => ({ id: g.id, name: g.name.trim() })),
-    goalsAgainst: 0
+    goalsAgainst: 0,
+    halfLength,
+    timerElapsed: 0,
+    phase: 'regulation'
   };
 
   saveActiveGame(game);
+  resetTimer();
   showIngame();
+  startTimer();
 }
 
 function resumeGame() {
   document.getElementById('game-overlay').classList.remove('hidden');
   document.getElementById('pregame-setup').classList.add('hidden');
+  restoreTimerState();
   showIngame();
+  const game = getActiveGame();
+  if (game && (game.phase || 'regulation') !== 'penalties') {
+    startTimer();
+  }
 }
 
 function showIngame() {
   const game = getActiveGame();
   if (!game) return;
 
-  document.getElementById('pregame-setup').classList.add('hidden');
+  // Hide all overlay screens, then show ingame
+  document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
   document.getElementById('ingame-view').classList.remove('hidden');
   document.getElementById('game-overlay').classList.remove('hidden');
 
   renderScoreboard();
   renderPlayerGrid();
+  updateGameControls();
 }
 
 function renderScoreboard() {
@@ -483,10 +622,42 @@ function renderScoreboard() {
   const goalsFor = game.events.filter(e => e.type === 'goal').length;
   document.getElementById('score-home').textContent = goalsFor;
   document.getElementById('score-away').textContent = game.goalsAgainst;
-  document.getElementById('score-half').textContent = game.half === 1 ? '1st Half' : '2nd Half';
   document.getElementById('score-away-label').textContent = game.opponent;
   document.getElementById('score-home-label').textContent = 'DCSC';
-  document.getElementById('half-toggle-btn').textContent = game.half === 1 ? 'Switch to 2nd Half' : 'Switch to 1st Half';
+
+  const phase = game.phase || 'regulation';
+  let halfLabel = '';
+  if (phase === 'regulation') halfLabel = game.half === 1 ? '1st Half' : '2nd Half';
+  else if (phase === 'overtime') halfLabel = game.half === 1 ? 'OT 1st Half' : 'OT 2nd Half';
+  else if (phase === 'penalties') halfLabel = 'Penalty Kicks';
+  document.getElementById('score-half').textContent = halfLabel;
+}
+
+function updateGameControls() {
+  const game = getActiveGame();
+  if (!game) return;
+  const phase = game.phase || 'regulation';
+  const halfBtn = document.getElementById('half-toggle-btn');
+  const endBtn = document.getElementById('end-game-btn');
+  const timerEl = document.getElementById('game-timer');
+
+  if (phase === 'regulation') {
+    halfBtn.classList.remove('hidden');
+    halfBtn.textContent = game.half === 1 ? 'End 1st Half' : 'End 2nd Half';
+    halfBtn.onclick = game.half === 1 ? endFirstHalf : endSecondHalf;
+    endBtn.classList.add('hidden');
+    timerEl.classList.remove('hidden');
+  } else if (phase === 'overtime') {
+    halfBtn.classList.remove('hidden');
+    halfBtn.textContent = game.half === 1 ? 'End OT 1st Half' : 'End OT 2nd Half';
+    halfBtn.onclick = game.half === 1 ? endOTFirstHalf : endOTSecondHalf;
+    endBtn.classList.add('hidden');
+    timerEl.classList.remove('hidden');
+  } else if (phase === 'penalties') {
+    halfBtn.classList.add('hidden');
+    endBtn.classList.add('hidden');
+    timerEl.classList.add('hidden');
+  }
 }
 
 function getGameRoster(game) {
@@ -527,7 +698,7 @@ function recordGoal(playerId) {
 
 function confirmGoal(scorerId, assistId) {
   const game = getActiveGame();
-  game.events.push({ type: 'goal', playerId: scorerId, assistPlayerId: assistId || null });
+  game.events.push({ type: 'goal', playerId: scorerId, assistPlayerId: assistId || null, minute: getCurrentMinute() });
   saveActiveGame(game);
   document.getElementById('assist-modal').classList.add('hidden');
   pendingScorerId = null;
@@ -542,7 +713,7 @@ function noAssist() {
 function recordOpponentGoal() {
   const game = getActiveGame();
   game.goalsAgainst++;
-  game.events.push({ type: 'opponent_goal' });
+  game.events.push({ type: 'opponent_goal', minute: getCurrentMinute() });
   saveActiveGame(game);
   renderScoreboard();
 }
@@ -579,32 +750,227 @@ function undoLastEvent() {
   }
 }
 
-function toggleHalf() {
-  const game = getActiveGame();
-  game.half = game.half === 1 ? 2 : 1;
-  saveActiveGame(game);
-  renderScoreboard();
-}
+// ---- Halftime / End-of-half flow ----
 
-function showEndGameConfirm() {
+function getScoreSummary() {
   const game = getActiveGame();
   const goalsFor = game.events.filter(e => e.type === 'goal').length;
-  document.getElementById('endgame-score').textContent = `DCSC ${goalsFor} - ${game.goalsAgainst} ${game.opponent}`;
-  document.getElementById('endgame-confirm').classList.remove('hidden');
+  return `DCSC ${goalsFor} - ${game.goalsAgainst} ${game.opponent}`;
 }
 
-function cancelEndGame() {
-  document.getElementById('endgame-confirm').classList.add('hidden');
+function endFirstHalf() {
+  stopTimer();
+  saveTimerState();
+  const game = getActiveGame();
+  document.getElementById('halftime-title').textContent =
+    (game.phase === 'overtime') ? 'OT Halftime' : 'Halftime';
+  document.getElementById('halftime-score').textContent = getScoreSummary();
+  document.getElementById('start-2nd-half-btn').textContent =
+    (game.phase === 'overtime') ? 'Start OT 2nd Half' : 'Start 2nd Half';
+  document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+  document.getElementById('halftime-view').classList.remove('hidden');
 }
 
-function finalizeGame() {
+function startSecondHalf() {
+  const game = getActiveGame();
+  game.half = 2;
+  game.timerElapsed = 0;
+  saveActiveGame(game);
+  resetTimer();
+  showIngame();
+  startTimer();
+}
+
+function endSecondHalf() {
+  stopTimer();
+  saveTimerState();
+  const game = getActiveGame();
+  const goalsFor = game.events.filter(e => e.type === 'goal').length;
+
+  if (goalsFor === game.goalsAgainst) {
+    // Tied — show options
+    document.getElementById('tied-score').textContent = getScoreSummary();
+    document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+    document.getElementById('tied-game-modal').classList.remove('hidden');
+  } else {
+    // Not tied — finalize
+    finalizeGame();
+  }
+}
+
+function endOTFirstHalf() {
+  endFirstHalf(); // reuses same halftime flow
+}
+
+function endOTSecondHalf() {
+  stopTimer();
+  saveTimerState();
+  const game = getActiveGame();
+  const goalsFor = game.events.filter(e => e.type === 'goal').length;
+
+  if (goalsFor === game.goalsAgainst) {
+    document.getElementById('post-ot-score').textContent = getScoreSummary();
+    document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+    document.getElementById('post-ot-modal').classList.remove('hidden');
+  } else {
+    finalizeGame();
+  }
+}
+
+function startOvertime() {
+  const otLen = parseInt(document.getElementById('ot-length-select').value) || 10;
+  const game = getActiveGame();
+  game.phase = 'overtime';
+  game.otHalfLength = otLen;
+  game.half = 1;
+  game.timerElapsed = 0;
+  saveActiveGame(game);
+  resetTimer();
+  showIngame();
+  startTimer();
+}
+
+function finalizeDraw() {
+  finalizeGame();
+}
+
+// ---- Penalty Kicks ----
+
+function startPenaltiesSetup() {
+  document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+  document.getElementById('pk-setup-modal').classList.remove('hidden');
+}
+
+function startPenalties() {
+  pkTotalKicks = parseInt(document.getElementById('pk-rounds-select').value) || 5;
+  pkRound = 1;
+  pkTeamTurn = 'dcsc';
+  pkScoreDCSC = 0;
+  pkScoreOpp = 0;
+  pkTakenDCSC = 0;
+  pkTakenOpp = 0;
+  pkSuddenDeath = false;
+  pendingPkPlayerId = null;
+
+  const game = getActiveGame();
+  game.phase = 'penalties';
+  saveActiveGame(game);
+
+  document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+  document.getElementById('pk-view').classList.remove('hidden');
+  renderPKView();
+}
+
+function renderPKView() {
+  const game = getActiveGame();
+  const roster = getGameRoster(game);
+  const present = roster.filter(p => game.playersPresent.includes(p.id) && p.name !== 'Own Goal');
+
+  document.getElementById('pk-score-display').textContent = `DCSC ${pkScoreDCSC} - ${pkScoreOpp} ${game.opponent}`;
+
+  const roundLabel = pkSuddenDeath ? 'Sudden Death' : `Kick ${pkTeamTurn === 'dcsc' ? pkTakenDCSC + 1 : pkTakenOpp + 1} of ${pkTotalKicks}`;
+  const teamLabel = pkTeamTurn === 'dcsc' ? 'DCSC' : game.opponent;
+  document.getElementById('pk-turn-label').textContent = `${teamLabel} — ${roundLabel}`;
+
+  // Show player selector for DCSC kicks
+  const selectEl = document.getElementById('pk-player-select');
+  if (pkTeamTurn === 'dcsc') {
+    selectEl.innerHTML = `<select id="pk-player-dropdown" class="pk-player-dropdown">
+      ${present.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+    </select>`;
+    selectEl.classList.remove('hidden');
+  } else {
+    selectEl.innerHTML = '';
+    selectEl.classList.add('hidden');
+    pendingPkPlayerId = null;
+  }
+}
+
+function pkRecordKick(result) {
+  const game = getActiveGame();
+  const eventType = result === 'goal' ? 'pk_goal' : 'pk_miss';
+
+  if (pkTeamTurn === 'dcsc') {
+    const dropdown = document.getElementById('pk-player-dropdown');
+    const playerId = dropdown ? parseInt(dropdown.value) : null;
+    const event = { type: eventType, team: 'dcsc', minute: 'PK', round: pkSuddenDeath ? 'SD' : (pkTakenDCSC + 1) };
+    if (playerId) event.playerId = playerId;
+    game.events.push(event);
+    if (result === 'goal') pkScoreDCSC++;
+    pkTakenDCSC++;
+    pkTeamTurn = 'opponent';
+  } else {
+    const event = { type: eventType, team: 'opponent', minute: 'PK', round: pkSuddenDeath ? 'SD' : (pkTakenOpp + 1) };
+    game.events.push(event);
+    if (result === 'goal') pkScoreOpp++;
+    pkTakenOpp++;
+    pkTeamTurn = 'dcsc';
+  }
+
+  saveActiveGame(game);
+
+  // Check clinch
+  const winner = checkPKClinch();
+  if (winner) {
+    finalizePK(winner);
+    return;
+  }
+
+  // Check if all regulation kicks taken and tied → sudden death
+  if (!pkSuddenDeath && pkTakenDCSC >= pkTotalKicks && pkTakenOpp >= pkTotalKicks) {
+    if (pkScoreDCSC !== pkScoreOpp) {
+      finalizePK(pkScoreDCSC > pkScoreOpp ? 'dcsc' : 'opponent');
+      return;
+    }
+    pkSuddenDeath = true;
+  }
+
+  renderPKView();
+}
+
+function checkPKClinch() {
+  if (pkSuddenDeath) {
+    // In sudden death: after both teams kick in a round, check if one scored and other missed
+    if (pkTakenDCSC === pkTakenOpp) {
+      if (pkScoreDCSC !== pkScoreOpp) return pkScoreDCSC > pkScoreOpp ? 'dcsc' : 'opponent';
+    }
+    return null;
+  }
+
+  const remainDCSC = pkTotalKicks - pkTakenDCSC;
+  const remainOpp = pkTotalKicks - pkTakenOpp;
+
+  // DCSC can't be caught even if opponent makes all remaining
+  if (pkScoreDCSC > pkScoreOpp + remainOpp) return 'dcsc';
+  // Opponent can't be caught
+  if (pkScoreOpp > pkScoreDCSC + remainDCSC) return 'opponent';
+
+  return null;
+}
+
+function finalizePK(winner) {
+  const game = getActiveGame();
+  game.pkScore = { dcsc: pkScoreDCSC, opponent: pkScoreOpp };
+  saveActiveGame(game);
+  finalizeGame(winner === 'dcsc' ? 'W' : 'L');
+}
+
+// ---- Finalize ----
+
+function finalizeGame(forceResult) {
+  stopTimer();
   const game = getActiveGame();
   const goalsFor = game.events.filter(e => e.type === 'goal').length;
   const goalsAgainst = game.goalsAgainst;
 
-  let result = 'D';
-  if (goalsFor > goalsAgainst) result = 'W';
-  else if (goalsFor < goalsAgainst) result = 'L';
+  let result;
+  if (forceResult) {
+    result = forceResult;
+  } else {
+    result = 'D';
+    if (goalsFor > goalsAgainst) result = 'W';
+    else if (goalsFor < goalsAgainst) result = 'L';
+  }
 
   const completed = {
     id: game.id,
@@ -615,17 +981,23 @@ function finalizeGame() {
     result,
     events: game.events,
     playersPresent: game.playersPresent,
-    guestPlayers: game.guestPlayers || []
+    guestPlayers: game.guestPlayers || [],
+    halfLength: game.halfLength
   };
+  if (game.pkScore) completed.pkScore = game.pkScore;
 
   const games = getGames();
   games.push(completed);
   saveGames(games);
   clearActiveGame();
 
-  document.getElementById('endgame-confirm').classList.add('hidden');
+  // Hide everything
+  document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
   document.getElementById('game-overlay').classList.add('hidden');
-  document.getElementById('ingame-view').classList.add('hidden');
+  document.getElementById('endgame-confirm').classList.add('hidden');
+  document.getElementById('tied-game-modal').classList.add('hidden');
+  document.getElementById('post-ot-modal').classList.add('hidden');
+  document.getElementById('pk-view').classList.add('hidden');
 
   switchTab('games');
 }
@@ -1052,14 +1424,14 @@ function cardSelectDcscPlayer(playerId) {
   if (cardType === 'yellow') {
     const hasYellow = game.events.some(e => e.type === 'yellow_card' && e.team === 'dcsc' && e.playerId === playerId);
     if (hasYellow) {
-      game.events.push({ type: 'red_card', team: 'dcsc', playerId, secondYellow: true });
+      game.events.push({ type: 'red_card', team: 'dcsc', playerId, secondYellow: true, minute: getCurrentMinute() });
       saveActiveGame(game);
       document.getElementById('card-modal').classList.add('hidden');
       showCardFlash('red');
       return;
     }
   }
-  game.events.push({ type: cardType + '_card', team: 'dcsc', playerId });
+  game.events.push({ type: cardType + '_card', team: 'dcsc', playerId, minute: getCurrentMinute() });
   saveActiveGame(game);
   document.getElementById('card-modal').classList.add('hidden');
   showCardFlash(cardType);
@@ -1070,14 +1442,14 @@ function cardSelectDcscCoach() {
   if (cardType === 'yellow') {
     const hasYellow = game.events.some(e => e.type === 'yellow_card' && e.team === 'dcsc' && e.isCoach);
     if (hasYellow) {
-      game.events.push({ type: 'red_card', team: 'dcsc', isCoach: true, secondYellow: true });
+      game.events.push({ type: 'red_card', team: 'dcsc', isCoach: true, secondYellow: true, minute: getCurrentMinute() });
       saveActiveGame(game);
       document.getElementById('card-modal').classList.add('hidden');
       showCardFlash('red');
       return;
     }
   }
-  game.events.push({ type: cardType + '_card', team: 'dcsc', isCoach: true });
+  game.events.push({ type: cardType + '_card', team: 'dcsc', isCoach: true, minute: getCurrentMinute() });
   saveActiveGame(game);
   document.getElementById('card-modal').classList.add('hidden');
   showCardFlash(cardType);
@@ -1098,7 +1470,7 @@ function cardSubmitOpponent() {
     }
   }
 
-  const event = { type: cardType + '_card', team: 'opponent' };
+  const event = { type: cardType + '_card', team: 'opponent', minute: getCurrentMinute() };
   if (jersey) event.jersey = jersey;
   game.events.push(event);
   saveActiveGame(game);
@@ -1117,7 +1489,7 @@ function cardSelectOppCoach() {
       return;
     }
   }
-  game.events.push({ type: cardType + '_card', team: 'opponent', isCoach: true });
+  game.events.push({ type: cardType + '_card', team: 'opponent', isCoach: true, minute: getCurrentMinute() });
   saveActiveGame(game);
   document.getElementById('card-modal').classList.add('hidden');
   showCardFlash(cardType);
@@ -1129,12 +1501,12 @@ function cardConfirmSecondYellow(isRed) {
   const isCoach = !jersey && game.events.some(e => e.type === 'yellow_card' && e.team === 'opponent' && e.isCoach);
 
   if (isRed) {
-    const event = { type: 'red_card', team: 'opponent', secondYellow: true };
+    const event = { type: 'red_card', team: 'opponent', secondYellow: true, minute: getCurrentMinute() };
     if (isCoach) event.isCoach = true;
     else if (jersey) event.jersey = jersey;
     game.events.push(event);
   } else {
-    const event = { type: 'yellow_card', team: 'opponent' };
+    const event = { type: 'yellow_card', team: 'opponent', minute: getCurrentMinute() };
     if (isCoach) event.isCoach = true;
     else if (jersey) event.jersey = jersey;
     game.events.push(event);
@@ -1364,8 +1736,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // In-game buttons
   document.getElementById('opponent-goal-btn').addEventListener('click', recordOpponentGoal);
   document.getElementById('undo-btn').addEventListener('click', undoLastEvent);
-  document.getElementById('half-toggle-btn').addEventListener('click', toggleHalf);
-  document.getElementById('end-game-btn').addEventListener('click', showEndGameConfirm);
+  // half-toggle-btn onclick is set dynamically in updateGameControls()
+
+  // Halftime
+  document.getElementById('start-2nd-half-btn').addEventListener('click', startSecondHalf);
 
   // Card button
   document.getElementById('card-btn').addEventListener('click', showCardModal);
@@ -1374,8 +1748,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('no-assist-btn').addEventListener('click', noAssist);
 
   // End game modal
-  document.getElementById('endgame-cancel').addEventListener('click', cancelEndGame);
-  document.getElementById('endgame-ok').addEventListener('click', finalizeGame);
+  // endgame-confirm modal no longer used (replaced by halftime/tied-game flow)
 
   // Roster
   document.getElementById('add-player-btn').addEventListener('click', showAddPlayer);

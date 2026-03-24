@@ -64,21 +64,28 @@ function formatDate(dateStr) {
 // 1b. EVENT RENDERING
 // ============================================
 function renderEventLine(e, rosterMap, opponent, score) {
+  const min = e.minute ? `<span class="event-minute">${e.minute}</span> ` : '';
   if (e.type === 'goal') {
     const scorer = rosterMap[e.playerId] || '?';
     const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
   } else if (e.type === 'opponent_goal') {
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${opponent}</div>`;
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}</div>`;
   } else if (e.type === 'yellow_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
-    return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${who}</div>`;
+    return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${min}${who}</div>`;
   } else if (e.type === 'red_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
     const note = e.secondYellow ? ' (2nd yellow)' : '';
-    return `<div class="goal-event card-event red"><span class="event-icon">🟥</span> ${who}${note}</div>`;
+    return `<div class="goal-event card-event red"><span class="event-icon">🟥</span> ${min}${who}${note}</div>`;
+  } else if (e.type === 'pk_goal') {
+    const who = e.team === 'dcsc' ? (rosterMap[e.playerId] || 'DCSC') : opponent;
+    return `<div class="goal-event pk-event"><span class="event-icon">⚽</span> PK ${who}</div>`;
+  } else if (e.type === 'pk_miss') {
+    const who = e.team === 'dcsc' ? (rosterMap[e.playerId] || 'DCSC') : opponent;
+    return `<div class="goal-event pk-event pk-miss"><span class="event-icon">✕</span> PK ${who}</div>`;
   }
   return '';
 }
@@ -157,7 +164,7 @@ function renderGamesTab() {
             <div class="game-date">${formatDate(g.date)}</div>
             <div class="game-matchup">vs ${g.opponent}</div>
           </div>
-          <div class="game-score result-${g.result}">${g.result} ${g.goalsFor}-${g.goalsAgainst}</div>
+          <div class="game-score result-${g.result}">${g.result} ${g.goalsFor}-${g.goalsAgainst}${g.pkScore ? ` (${g.pkScore.dcsc}-${g.pkScore.opponent})` : ''}</div>
         </div>
         <div class="game-details">
           ${hasEvents ? detailLines : '<div style="color:#999">No events recorded</div>'}

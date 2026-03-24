@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
@@ -76,6 +76,16 @@
         <label for="opponent-input">Opponent</label>
         <input type="text" id="opponent-input" placeholder="Enter opponent name" autocomplete="off">
       </div>
+      <div class="form-group">
+        <label for="half-length-select">Half Length</label>
+        <select id="half-length-select">
+          <option value="25" selected>25 min</option>
+          <option value="30">30 min</option>
+          <option value="35">35 min</option>
+          <option value="40">40 min</option>
+          <option value="45">45 min</option>
+        </select>
+      </div>
       <h3>Who's playing today?</h3>
       <div id="attendance-list"></div>
       <h3>Guest Players</h3>
@@ -90,6 +100,7 @@
     <!-- In-Game View -->
     <div id="ingame-view" class="overlay-screen hidden">
       <div id="scoreboard">
+        <div id="game-timer">0:00</div>
         <div id="score-half">1st Half</div>
         <div id="score-display">
           <span id="score-home">0</span>
@@ -109,8 +120,70 @@
         <button id="undo-btn" class="btn btn-secondary">Undo</button>
       </div>
       <div class="game-controls">
-        <button id="half-toggle-btn" class="btn btn-secondary">Switch to 2nd Half</button>
-        <button id="end-game-btn" class="btn btn-warning">End Game</button>
+        <button id="half-toggle-btn" class="btn btn-secondary">End 1st Half</button>
+        <button id="end-game-btn" class="btn btn-warning hidden">End Game</button>
+      </div>
+    </div>
+
+    <!-- Halftime View -->
+    <div id="halftime-view" class="overlay-screen hidden">
+      <h2 id="halftime-title">Halftime</h2>
+      <div id="halftime-score" class="halftime-score"></div>
+      <button id="start-2nd-half-btn" class="btn btn-primary btn-large">Start 2nd Half</button>
+    </div>
+
+    <!-- Tied Game Modal -->
+    <div id="tied-game-modal" class="overlay-screen hidden">
+      <h2>Game Tied!</h2>
+      <div id="tied-score" class="halftime-score"></div>
+      <div class="tied-options">
+        <button class="btn btn-primary btn-large" onclick="finalizeDraw()">Game Over (Draw)</button>
+        <div class="tied-ot-section">
+          <label for="ot-length-select">Overtime Half Length</label>
+          <select id="ot-length-select">
+            <option value="5">5 min</option>
+            <option value="10" selected>10 min</option>
+            <option value="15">15 min</option>
+          </select>
+          <button class="btn btn-secondary btn-large" onclick="startOvertime()">Start Overtime</button>
+        </div>
+        <button class="btn btn-warning btn-large" onclick="startPenaltiesSetup()">Penalty Kicks</button>
+      </div>
+    </div>
+
+    <!-- Post-OT Tied Modal -->
+    <div id="post-ot-modal" class="overlay-screen hidden">
+      <h2>Still Tied After OT!</h2>
+      <div id="post-ot-score" class="halftime-score"></div>
+      <div class="tied-options">
+        <button class="btn btn-primary btn-large" onclick="finalizeDraw()">Game Over (Draw)</button>
+        <button class="btn btn-warning btn-large" onclick="startPenaltiesSetup()">Penalty Kicks</button>
+      </div>
+    </div>
+
+    <!-- PK Setup Modal -->
+    <div id="pk-setup-modal" class="overlay-screen hidden">
+      <h2>Penalty Kicks</h2>
+      <div class="form-group">
+        <label for="pk-rounds-select">Kicks per team</label>
+        <select id="pk-rounds-select">
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-large" onclick="startPenalties()">Start PKs</button>
+    </div>
+
+    <!-- PK View -->
+    <div id="pk-view" class="overlay-screen hidden">
+      <h2>Penalty Kicks</h2>
+      <div id="pk-score-display" class="pk-score"></div>
+      <div id="pk-turn-label" class="pk-turn"></div>
+      <div id="pk-player-select"></div>
+      <div class="pk-buttons">
+        <button class="btn btn-primary btn-large" id="pk-goal-btn" onclick="pkRecordKick('goal')">Goal</button>
+        <button class="btn btn-danger btn-large" id="pk-miss-btn" onclick="pkRecordKick('miss')">Miss</button>
       </div>
     </div>
 

@@ -971,3 +971,162 @@ body {
     font-size: 0.9rem;
   }
 }
+
+/* ============================================
+   TIMER
+   ============================================ */
+#game-timer {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+
+#game-timer.timer-extra {
+  color: #E53E3E;
+}
+
+/* ============================================
+   EVENT MINUTES
+   ============================================ */
+.event-minute {
+  color: #6B7280;
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+/* ============================================
+   PK EVENTS IN GAME DETAILS
+   ============================================ */
+.pk-event {
+  font-weight: 500;
+}
+
+.pk-miss {
+  opacity: 0.6;
+}
+
+.pk-miss .event-icon {
+  color: #C41E3A;
+}
+
+/* ============================================
+   HALFTIME / TIED / PK OVERLAY SCREENS
+   ============================================ */
+#halftime-view,
+#tied-game-modal,
+#post-ot-modal,
+#pk-setup-modal,
+#pk-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 20px;
+  min-height: 60vh;
+}
+
+#halftime-view h2,
+#tied-game-modal h2,
+#post-ot-modal h2,
+#pk-setup-modal h2,
+#pk-view h2 {
+  color: #2B2D6B;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+}
+
+.halftime-score {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2B2D6B;
+  margin-bottom: 24px;
+}
+
+.tied-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.tied-ot-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+}
+
+.tied-ot-section label {
+  font-size: 0.85rem;
+  color: #6B7280;
+}
+
+.tied-ot-section select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* ============================================
+   PK VIEW
+   ============================================ */
+.pk-score {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #2B2D6B;
+  margin-bottom: 12px;
+}
+
+.pk-turn {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 20px;
+}
+
+.pk-buttons {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.pk-buttons .btn {
+  flex: 1;
+}
+
+.pk-player-dropdown {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #2B2D6B;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#pk-player-select {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Half-length select in pregame */
+#half-length-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  font-size: 1rem;
+  background: white;
+}
