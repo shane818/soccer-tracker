@@ -1130,3 +1130,22 @@ body {
   font-size: 1rem;
   background: white;
 }
+
+/* PK first kicker radio buttons */
+.pk-first-kick-options {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.pk-first-kick-options .radio-label {
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pk-first-kick-options input[type="radio"] {
+  accent-color: #2B2D6B;
+  margin-right: 4px;
+}

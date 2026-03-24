@@ -591,14 +591,51 @@ function kickOff() {
 }
 
 function resumeGame() {
-  document.getElementById('game-overlay').classList.remove('hidden');
-  document.getElementById('pregame-setup').classList.add('hidden');
-  restoreTimerState();
-  showIngame();
   const game = getActiveGame();
-  if (game && (game.phase || 'regulation') !== 'penalties') {
+  if (!game) return;
+  document.getElementById('game-overlay').classList.remove('hidden');
+
+  if (game.phase === 'penalties') {
+    restorePKState(game);
+    document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
+    document.getElementById('pk-view').classList.remove('hidden');
+    renderPKView();
+  } else {
+    restoreTimerState();
+    showIngame();
     startTimer();
   }
+}
+
+function restorePKState(game) {
+  const s = game.pkState;
+  pkTotalKicks = s?.totalKicks || 5;
+  // Always rebuild scores/turn from events for consistency
+  rebuildPKStateFromEvents(game);
+}
+
+function rebuildPKStateFromEvents(game) {
+  pkScoreDCSC = 0; pkScoreOpp = 0;
+  pkTakenDCSC = 0; pkTakenOpp = 0;
+  const firstKicker = game.pkState?.firstKicker || 'dcsc';
+  const secondKicker = firstKicker === 'dcsc' ? 'opponent' : 'dcsc';
+  game.events.forEach(e => {
+    if (e.type === 'pk_goal') {
+      if (e.team === 'dcsc') { pkScoreDCSC++; pkTakenDCSC++; }
+      else { pkScoreOpp++; pkTakenOpp++; }
+    } else if (e.type === 'pk_miss') {
+      if (e.team === 'dcsc') pkTakenDCSC++;
+      else pkTakenOpp++;
+    }
+  });
+  // Determine whose turn: alternating, first kicker goes first each round
+  if (pkTakenDCSC === pkTakenOpp) {
+    pkTeamTurn = firstKicker;  // equal kicks taken → first kicker's turn
+  } else {
+    pkTeamTurn = secondKicker; // unequal → second kicker catches up
+  }
+  // Check sudden death
+  pkSuddenDeath = pkTakenDCSC >= pkTotalKicks && pkTakenOpp >= pkTotalKicks && pkScoreDCSC === pkScoreOpp;
 }
 
 function showIngame() {
@@ -738,6 +775,12 @@ function undoLastEvent() {
   } else if (last.type === 'red_card') {
     const who = last.isCoach ? 'Coach' : (last.team === 'dcsc' ? (roster.find(r => r.id === last.playerId)?.name || '?') : (last.jersey ? `#${last.jersey}` : 'Opponent'));
     desc = `Red card: ${who}`;
+  } else if (last.type === 'pk_goal') {
+    const who = last.team === 'dcsc' ? (roster.find(r => r.id === last.playerId)?.name || 'DCSC') : game.opponent;
+    desc = `PK Goal: ${who}`;
+  } else if (last.type === 'pk_miss') {
+    const who = last.team === 'dcsc' ? (roster.find(r => r.id === last.playerId)?.name || 'DCSC') : game.opponent;
+    desc = `PK Miss: ${who}`;
   }
 
   if (confirm(`Undo: ${desc}?`)) {
@@ -745,8 +788,20 @@ function undoLastEvent() {
     if (last.type === 'opponent_goal') {
       game.goalsAgainst = Math.max(0, game.goalsAgainst - 1);
     }
-    saveActiveGame(game);
-    renderScoreboard();
+    // If PK event, rebuild PK state from remaining events
+    if (last.type === 'pk_goal' || last.type === 'pk_miss') {
+      rebuildPKStateFromEvents(game);
+      game.pkState = {
+        totalKicks: pkTotalKicks, firstKicker: game.pkState?.firstKicker || 'dcsc',
+        teamTurn: pkTeamTurn, scoreDCSC: pkScoreDCSC, scoreOpp: pkScoreOpp,
+        takenDCSC: pkTakenDCSC, takenOpp: pkTakenOpp, suddenDeath: pkSuddenDeath
+      };
+      saveActiveGame(game);
+      renderPKView();
+    } else {
+      saveActiveGame(game);
+      renderScoreboard();
+    }
   }
 }
 
@@ -837,6 +892,10 @@ function finalizeDraw() {
 // ---- Penalty Kicks ----
 
 function startPenaltiesSetup() {
+  const game = getActiveGame();
+  // Set opponent name on the radio label
+  const oppLabel = document.getElementById('pk-first-opp-label');
+  if (oppLabel && game) oppLabel.lastChild.textContent = ' ' + game.opponent;
   document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
   document.getElementById('pk-setup-modal').classList.remove('hidden');
 }
@@ -844,7 +903,8 @@ function startPenaltiesSetup() {
 function startPenalties() {
   pkTotalKicks = parseInt(document.getElementById('pk-rounds-select').value) || 5;
   pkRound = 1;
-  pkTeamTurn = 'dcsc';
+  const firstKicker = document.querySelector('input[name="pk-first"]:checked');
+  pkTeamTurn = (firstKicker && firstKicker.value === 'opponent') ? 'opponent' : 'dcsc';
   pkScoreDCSC = 0;
   pkScoreOpp = 0;
   pkTakenDCSC = 0;
@@ -854,6 +914,11 @@ function startPenalties() {
 
   const game = getActiveGame();
   game.phase = 'penalties';
+  game.pkState = {
+    totalKicks: pkTotalKicks, firstKicker: pkTeamTurn,
+    teamTurn: pkTeamTurn, scoreDCSC: 0, scoreOpp: 0,
+    takenDCSC: 0, takenOpp: 0, suddenDeath: false
+  };
   saveActiveGame(game);
 
   document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
@@ -907,6 +972,12 @@ function pkRecordKick(result) {
     pkTeamTurn = 'dcsc';
   }
 
+  // Persist PK state
+  game.pkState = {
+    totalKicks: pkTotalKicks, firstKicker: game.pkState?.firstKicker || 'dcsc',
+    teamTurn: pkTeamTurn, scoreDCSC: pkScoreDCSC, scoreOpp: pkScoreOpp,
+    takenDCSC: pkTakenDCSC, takenOpp: pkTakenOpp, suddenDeath: pkSuddenDeath
+  };
   saveActiveGame(game);
 
   // Check clinch
@@ -994,7 +1065,6 @@ function finalizeGame(forceResult) {
   // Hide everything
   document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
   document.getElementById('game-overlay').classList.add('hidden');
-  document.getElementById('endgame-confirm').classList.add('hidden');
   document.getElementById('tied-game-modal').classList.add('hidden');
   document.getElementById('post-ot-modal').classList.add('hidden');
   document.getElementById('pk-view').classList.add('hidden');
@@ -1168,6 +1238,12 @@ function saveEditGame() {
   let result = 'D';
   if (goalsFor > goalsAgainst) result = 'W';
   else if (goalsFor < goalsAgainst) result = 'L';
+
+  // If game had PK result, preserve it and keep the original result (W/L from PKs)
+  const hadPK = !!games[idx].pkScore;
+  if (hadPK && goalsFor === goalsAgainst) {
+    result = games[idx].result; // preserve W/L from PK outcome
+  }
 
   games[idx] = {
     ...games[idx],
@@ -1748,7 +1824,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('no-assist-btn').addEventListener('click', noAssist);
 
   // End game modal
-  // endgame-confirm modal no longer used (replaced by halftime/tied-game flow)
+  // (endgame-confirm modal removed — replaced by halftime/tied-game flow)
 
   // Roster
   document.getElementById('add-player-btn').addEventListener('click', showAddPlayer);

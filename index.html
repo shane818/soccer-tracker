@@ -172,6 +172,13 @@
           <option value="5" selected>5</option>
         </select>
       </div>
+      <div class="form-group">
+        <label>Who kicks first?</label>
+        <div class="pk-first-kick-options">
+          <label class="radio-label"><input type="radio" name="pk-first" value="dcsc" checked> DCSC</label>
+          <label class="radio-label" id="pk-first-opp-label"><input type="radio" name="pk-first" value="opponent"> Opponent</label>
+        </div>
+      </div>
       <button class="btn btn-primary btn-large" onclick="startPenalties()">Start PKs</button>
     </div>
 
@@ -252,17 +259,7 @@
     </div>
   </div>
 
-  <!-- End Game Confirmation -->
-  <div id="endgame-confirm" class="hidden">
-    <div class="modal-content">
-      <h3>End Game?</h3>
-      <p id="endgame-score"></p>
-      <div class="modal-actions">
-        <button id="endgame-cancel" class="btn btn-secondary">Keep Playing</button>
-        <button id="endgame-ok" class="btn btn-primary">End Game</button>
-      </div>
-    </div>
-  </div>
+  <!-- End Game Confirmation removed — replaced by halftime/tied-game flow -->
 
   <!-- Edit Player Modal -->
   <div id="edit-player-modal" class="hidden">
