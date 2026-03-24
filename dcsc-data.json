@@ -1038,6 +1038,73 @@
       ]
     },
     {
+      "id": "game_1773206043547",
+      "date": "2026-03-11",
+      "opponent": "PPA Orange 2015",
+      "goalsFor": 8,
+      "goalsAgainst": 0,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 2
+        },
+        {
+          "type": "goal",
+          "playerId": 13,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 9,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 10,
+          "assistPlayerId": 1
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": 1
+        },
+        {
+          "type": "goal",
+          "playerId": 4,
+          "assistPlayerId": null
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
       "id": "game_1773489506445",
       "date": "2026-03-14",
       "opponent": "Springfield SYC Soccer SYC 2015B Pre-MLS Next II",
@@ -1225,5 +1292,5 @@
       "guestPlayers": []
     }
   ],
-  "exportedAt": "2026-03-24T04:03:35.998Z"
+  "exportedAt": "2026-03-24T04:34:34.530Z"
 }
