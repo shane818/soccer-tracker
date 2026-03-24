@@ -1149,3 +1149,31 @@ body {
   accent-color: #2B2D6B;
   margin-right: 4px;
 }
+
+/* Edit PK rows */
+.edit-pk-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.edit-pk-row select {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.85rem;
+}
+
+.edit-pk-row .edit-pk-player {
+  flex: 1.5;
+}
+
+.edit-pk-summary {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2B2D6B;
+  margin-top: 8px;
+}

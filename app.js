@@ -1148,10 +1148,21 @@ function showEditGame(gameId) {
   editGoalEvents = (game.events || []).filter(e => e.type === 'goal').map(e => ({ ...e }));
   editOpponentGoalCount = (game.events || []).filter(e => e.type === 'opponent_goal').length;
   editCardEvents = (game.events || []).filter(e => e.type === 'yellow_card' || e.type === 'red_card').map(e => ({ ...e }));
+  editPKEvents = (game.events || []).filter(e => e.type === 'pk_goal' || e.type === 'pk_miss').map(e => ({ ...e }));
 
   renderEditGoals();
   renderEditCards();
   document.getElementById('edit-opponent-goals').textContent = editOpponentGoalCount;
+
+  // Show PK section only if game had PKs
+  const pkSection = document.getElementById('edit-pk-section');
+  if (editPKEvents.length > 0 || game.pkScore) {
+    pkSection.classList.remove('hidden');
+    renderEditPKs(game.opponent);
+  } else {
+    pkSection.classList.add('hidden');
+  }
+
   document.getElementById('edit-game-modal').classList.remove('hidden');
 }
 
@@ -1219,7 +1230,7 @@ function saveEditGame() {
   if (!opponent) { alert('Enter an opponent name!'); return; }
   if (!date) { alert('Enter a date!'); return; }
 
-  // Rebuild events array: goals, then opponent goals, then cards
+  // Rebuild events array: goals, then opponent goals, then cards, then PKs
   const events = editGoalEvents.map(e => ({ type: 'goal', playerId: e.playerId, assistPlayerId: e.assistPlayerId }));
   for (let i = 0; i < editOpponentGoalCount; i++) {
     events.push({ type: 'opponent_goal' });
@@ -1232,6 +1243,12 @@ function saveEditGame() {
     if (e.secondYellow) card.secondYellow = true;
     events.push(card);
   });
+  editPKEvents.forEach(e => {
+    const pk = { type: e.type, team: e.team, minute: 'PK' };
+    if (e.playerId) pk.playerId = e.playerId;
+    if (e.round) pk.round = e.round;
+    events.push(pk);
+  });
 
   const goalsFor = editGoalEvents.length;
   const goalsAgainst = editOpponentGoalCount;
@@ -1239,10 +1256,19 @@ function saveEditGame() {
   if (goalsFor > goalsAgainst) result = 'W';
   else if (goalsFor < goalsAgainst) result = 'L';
 
-  // If game had PK result, preserve it and keep the original result (W/L from PKs)
-  const hadPK = !!games[idx].pkScore;
-  if (hadPK && goalsFor === goalsAgainst) {
-    result = games[idx].result; // preserve W/L from PK outcome
+  // Recalculate PK score from edited PK events
+  let pkScore = null;
+  if (editPKEvents.length > 0) {
+    let pkDCSC = 0, pkOpp = 0;
+    editPKEvents.forEach(e => {
+      if (e.type === 'pk_goal') { if (e.team === 'dcsc') pkDCSC++; else pkOpp++; }
+    });
+    pkScore = { dcsc: pkDCSC, opponent: pkOpp };
+    // PK winner determines result when regulation is tied
+    if (goalsFor === goalsAgainst) {
+      if (pkDCSC > pkOpp) result = 'W';
+      else if (pkOpp > pkDCSC) result = 'L';
+    }
   }
 
   games[idx] = {
@@ -1254,6 +1280,12 @@ function saveEditGame() {
     result,
     events
   };
+  // Update or remove pkScore
+  if (pkScore) {
+    games[idx].pkScore = pkScore;
+  } else {
+    delete games[idx].pkScore;
+  }
 
   saveGames(games);
   document.getElementById('edit-game-modal').classList.add('hidden');
@@ -1616,6 +1648,7 @@ function showCardFlash(type) {
 // 6e. EDIT GAME — CARD EDITING
 // ============================================
 let editCardEvents = [];
+let editPKEvents = [];
 
 function renderEditCards() {
   const roster = getRoster().filter(p => p.name !== 'Own Goal');
@@ -1708,6 +1741,99 @@ function addEditCard() {
 function removeEditCard(index) {
   editCardEvents.splice(index, 1);
   renderEditCards();
+}
+
+// ============================================
+// 6f. EDIT GAME — PK EDITING
+// ============================================
+function renderEditPKs(opponent) {
+  const roster = getRoster().filter(p => p.name !== 'Own Goal');
+  const container = document.getElementById('edit-game-pks');
+  const opp = opponent || document.getElementById('edit-game-opponent').value.trim() || 'Opponent';
+
+  if (editPKEvents.length === 0) {
+    container.innerHTML = '';
+    updateEditPKSummary(opp);
+    return;
+  }
+
+  container.innerHTML = editPKEvents.map((e, i) => {
+    const teamOptions = ['dcsc', 'opponent'].map(t =>
+      `<option value="${t}" ${e.team === t ? 'selected' : ''}>${t === 'dcsc' ? 'DCSC' : opp}</option>`
+    ).join('');
+
+    const resultOptions = ['pk_goal', 'pk_miss'].map(t =>
+      `<option value="${t}" ${e.type === t ? 'selected' : ''}>${t === 'pk_goal' ? 'Goal' : 'Miss'}</option>`
+    ).join('');
+
+    let playerField = '';
+    if (e.team === 'dcsc') {
+      const playerOptions = roster.map(p =>
+        `<option value="${p.id}" ${p.id === e.playerId ? 'selected' : ''}>${p.name}</option>`
+      ).join('');
+      playerField = `<select class="edit-pk-player" onchange="updateEditPKPlayer(${i}, this.value)">${playerOptions}</select>`;
+    }
+
+    return `
+      <div class="edit-pk-row">
+        <select onchange="updateEditPKTeam(${i}, this.value)">${teamOptions}</select>
+        ${playerField}
+        <select onchange="updateEditPKResult(${i}, this.value)">${resultOptions}</select>
+        <button class="btn-remove" onclick="removeEditPK(${i})">✕</button>
+      </div>
+    `;
+  }).join('');
+
+  updateEditPKSummary(opp);
+}
+
+function updateEditPKTeam(index, value) {
+  editPKEvents[index].team = value;
+  if (value === 'opponent') delete editPKEvents[index].playerId;
+  renderEditPKs();
+}
+
+function updateEditPKResult(index, value) {
+  editPKEvents[index].type = value;
+  renderEditPKs();
+}
+
+function updateEditPKPlayer(index, value) {
+  editPKEvents[index].playerId = parseInt(value);
+}
+
+function addEditPK() {
+  const roster = getRoster().filter(p => p.name !== 'Own Goal');
+  // Alternate: if last was DCSC, next is opponent, and vice versa
+  const lastTeam = editPKEvents.length > 0 ? editPKEvents[editPKEvents.length - 1].team : 'opponent';
+  const nextTeam = lastTeam === 'dcsc' ? 'opponent' : 'dcsc';
+  const event = { type: 'pk_goal', team: nextTeam, minute: 'PK' };
+  if (nextTeam === 'dcsc' && roster.length > 0) event.playerId = roster[0].id;
+  editPKEvents.push(event);
+  renderEditPKs();
+}
+
+function removeEditPK(index) {
+  editPKEvents.splice(index, 1);
+  renderEditPKs();
+}
+
+function updateEditPKSummary(opponent) {
+  const opp = opponent || document.getElementById('edit-game-opponent').value.trim() || 'Opponent';
+  let dcsc = 0, oppScore = 0;
+  editPKEvents.forEach(e => {
+    if (e.type === 'pk_goal') {
+      if (e.team === 'dcsc') dcsc++;
+      else oppScore++;
+    }
+  });
+  const el = document.getElementById('edit-pk-summary');
+  if (editPKEvents.length > 0) {
+    const winner = dcsc > oppScore ? 'DCSC wins' : (oppScore > dcsc ? `${opp} wins` : 'Tied');
+    el.textContent = `PK Score: DCSC ${dcsc} - ${oppScore} ${opp} (${winner})`;
+  } else {
+    el.textContent = '';
+  }
 }
 
 // ============================================
@@ -1838,6 +1964,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('opp-goal-minus').addEventListener('click', () => changeEditOpponentGoals(-1));
   document.getElementById('opp-goal-plus').addEventListener('click', () => changeEditOpponentGoals(1));
   document.getElementById('edit-add-card-btn').addEventListener('click', addEditCard);
+  document.getElementById('edit-add-pk-btn').addEventListener('click', addEditPK);
 
   // Delete game confirmation
   document.getElementById('delete-game-cancel').addEventListener('click', cancelDeleteGame);
