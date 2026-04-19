@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DCSC">
+  <meta name="theme-color" content="#1E1F4D">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <title>DCSC Soccer Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
@@ -100,6 +104,7 @@
     <!-- In-Game View -->
     <div id="ingame-view" class="overlay-screen hidden">
       <div id="scoreboard">
+        <button id="wake-lock-toggle" class="wake-lock-btn" onclick="toggleWakeLock()" style="display:none">🔓 Screen Off</button>
         <div id="game-timer">0:00</div>
         <div id="score-half">1st Half</div>
         <div id="score-display">

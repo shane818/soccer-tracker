@@ -383,6 +383,8 @@ function startTimer() {
   timerStartedAt = Date.now();
   timerInterval = setInterval(updateTimerDisplay, 1000);
   updateTimerDisplay();
+  // Auto-request screen wake lock when timer starts (game in progress)
+  requestWakeLock();
 }
 
 function stopTimer() {
@@ -419,6 +421,8 @@ function updateTimerDisplay() {
   const elapsed = getElapsedSeconds();
   el.textContent = formatTimer(elapsed, currentHalfLen);
   el.classList.toggle('timer-extra', elapsed >= currentHalfLen * 60);
+  // Auto-persist timer state every tick so closing the browser mid-half doesn't lose elapsed time
+  saveTimerState();
 }
 
 function formatTimer(totalSeconds, halfLength) {
@@ -467,7 +471,9 @@ function getCurrentMinute() {
 function saveTimerState() {
   const game = getActiveGame();
   if (!game) return;
-  game.timerElapsed = getElapsedSeconds();
+  game.timerElapsed = timerElapsed;
+  // Save absolute start timestamp so elapsed time can be reconstructed across page reloads
+  game.timerStartedAt = timerStartedAt;
   saveActiveGame(game);
 }
 
@@ -475,7 +481,68 @@ function restoreTimerState() {
   const game = getActiveGame();
   if (!game) return;
   timerElapsed = game.timerElapsed || 0;
+  // If timer was running when saved, add wall-clock time elapsed since then
+  if (game.timerStartedAt) {
+    const elapsedSinceStart = Math.floor((Date.now() - game.timerStartedAt) / 1000);
+    if (elapsedSinceStart > 0) timerElapsed += elapsedSinceStart;
+    game.timerStartedAt = null;
+    saveActiveGame(game);
+  }
   timerStartedAt = null;
+}
+
+// ============================================
+// 4c. WAKE LOCK (keep screen on during games)
+// ============================================
+let wakeLock = null;
+let wakeLockUserDisabled = false;
+
+async function requestWakeLock() {
+  if (wakeLockUserDisabled) return;
+  if (!('wakeLock' in navigator)) { updateWakeLockUI(); return; }
+  if (wakeLock) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', () => {
+      wakeLock = null;
+      updateWakeLockUI();
+    });
+    updateWakeLockUI();
+  } catch (e) {
+    // User denied, or browser doesn't allow (e.g. battery saver)
+    wakeLock = null;
+    updateWakeLockUI();
+  }
+}
+
+async function releaseWakeLock() {
+  if (wakeLock) {
+    try { await wakeLock.release(); } catch (e) {}
+    wakeLock = null;
+  }
+  updateWakeLockUI();
+}
+
+function toggleWakeLock() {
+  if (wakeLock) {
+    wakeLockUserDisabled = true;
+    releaseWakeLock();
+  } else {
+    wakeLockUserDisabled = false;
+    requestWakeLock();
+  }
+}
+
+function updateWakeLockUI() {
+  const btn = document.getElementById('wake-lock-toggle');
+  if (!btn) return;
+  if (!('wakeLock' in navigator)) {
+    btn.style.display = 'none';
+    return;
+  }
+  btn.style.display = '';
+  btn.textContent = wakeLock ? '🔒 Screen On' : '🔓 Screen Off';
+  btn.classList.toggle('active', !!wakeLock);
 }
 
 // ============================================
@@ -600,10 +667,11 @@ function resumeGame() {
     document.querySelectorAll('#game-overlay .overlay-screen').forEach(el => el.classList.add('hidden'));
     document.getElementById('pk-view').classList.remove('hidden');
     renderPKView();
+    requestWakeLock();  // keep screen on during PKs too
   } else {
     restoreTimerState();
     showIngame();
-    startTimer();
+    startTimer();  // startTimer also requests wake lock
   }
 }
 
@@ -650,6 +718,7 @@ function showIngame() {
   renderScoreboard();
   renderPlayerGrid();
   updateGameControls();
+  updateWakeLockUI();
 }
 
 function renderScoreboard() {
@@ -1030,6 +1099,8 @@ function finalizePK(winner) {
 
 function finalizeGame(forceResult) {
   stopTimer();
+  releaseWakeLock();
+  wakeLockUserDisabled = false;  // reset for next game
   const game = getActiveGame();
   const goalsFor = game.events.filter(e => e.type === 'goal').length;
   const goalsAgainst = game.goalsAgainst;
@@ -1919,6 +1990,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadDataFile();
   renderHeader();
   renderGamesTab();
+
+  // Persist timer state when page is hidden or about to unload
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) saveTimerState();
+    else if (getActiveGame() && !wakeLockUserDisabled) requestWakeLock();
+  });
+  window.addEventListener('pagehide', saveTimerState);
+  window.addEventListener('beforeunload', saveTimerState);
 
   // Tab bar
   document.querySelectorAll('.tab-btn').forEach(btn => {

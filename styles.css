@@ -572,6 +572,32 @@ body {
   padding: 16px;
   text-align: center;
   margin-bottom: 16px;
+  position: relative;
+}
+
+.wake-lock-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+.wake-lock-btn.active {
+  background: rgba(22, 163, 74, 0.45);
+}
+
+#scoreboard #game-timer {
+  padding-top: 4px;
 }
 
 #score-half {
@@ -785,7 +811,7 @@ body {
   padding: 10px 8px;
   border: 2px solid #ddd;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   background: white;
   color: #333;
   -webkit-appearance: none;
@@ -1163,7 +1189,7 @@ body {
   padding: 8px 4px;
   border-radius: 6px;
   border: 1px solid #ddd;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .edit-pk-row .edit-pk-player {
