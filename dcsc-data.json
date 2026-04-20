@@ -1240,7 +1240,7 @@
           "type": "goal",
           "playerId": 3,
           "assistPlayerId": null,
-          "minute": "0'"
+          "minute": "15'"
         },
         {
           "type": "goal",
@@ -1258,17 +1258,17 @@
           "type": "goal",
           "playerId": 10,
           "assistPlayerId": null,
-          "minute": "50+2'"
+          "minute": "62'"
         },
         {
           "type": "opponent_goal",
-          "minute": "50+4'"
+          "minute": "64'"
         },
         {
           "type": "goal",
           "playerId": 5,
           "assistPlayerId": 3,
-          "minute": "50+12'"
+          "minute": "70'"
         }
       ],
       "playersPresent": [
@@ -1289,7 +1289,7 @@
         15
       ],
       "guestPlayers": [],
-      "halfLength": 25
+      "halfLength": 35
     }
   ],
   "exportedAt": "2026-04-20T12:08:54.952Z"
