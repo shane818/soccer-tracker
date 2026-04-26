@@ -1300,6 +1300,12 @@
       "result": "L",
       "events": [
         {
+          "type": "opponent_goal", "minute": "6'"
+        },
+        {
+          "type": "opponent_goal", "minute": "21'"
+        },
+        {
           "type": "goal",
           "playerId": 3,
           "assistPlayerId": 5,
@@ -1313,34 +1319,29 @@
           "penalty": true
         },
         {
+          "type": "opponent_goal", "minute": "30'"
+        },
+        {
+          "type": "opponent_goal", "minute": "44'"
+        },
+        {
+          "type": "yellow_card",
+          "team": "opponent",
+          "jersey": "5"
+        },
+        {
+          "type": "opponent_goal", "minute": "58'"
+        },
+        {
           "type": "goal",
           "playerId": 2,
           "assistPlayerId": 11,
           "minute": "65'"
         },
         {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "yellow_card",
-          "team": "opponent",
-          "jersey": "5"
+          "type": "opponent_goal", "minute": "69'"
         }
+        
       ],
       "playersPresent": [
         1,
