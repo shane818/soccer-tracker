@@ -1300,14 +1300,6 @@
       "result": "L",
       "events": [
         {
-          "type": "opponent_goal",
-          "minute": "6'"
-        },
-        {
-          "type": "opponent_goal",
-          "minute": "21'"
-        },
-        {
           "type": "goal",
           "playerId": 3,
           "assistPlayerId": 5,
@@ -1317,25 +1309,8 @@
           "type": "goal",
           "playerId": 11,
           "assistPlayerId": null,
-          "minute": "29'"
-        },
-        {
-          "type": "opponent_goal",
-          "minute": "30'"
-        },
-        {
-          "type": "opponent_goal",
-          "minute": "44'"
-        },
-        {
-          "type": "yellow_card",
-          "team": "opponent",
-          "minute": "53'",
-          "jersey": "5"
-        },
-        {
-          "type": "opponent_goal",
-          "minute": "58'"
+          "minute": "29'",
+          "penalty": true
         },
         {
           "type": "goal",
@@ -1344,8 +1319,27 @@
           "minute": "65'"
         },
         {
-          "type": "opponent_goal",
-          "minute": "69'"
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "opponent_goal"
+        },
+        {
+          "type": "yellow_card",
+          "team": "opponent",
+          "jersey": "5"
         }
       ],
       "playersPresent": [
@@ -1369,5 +1363,5 @@
       "halfLength": 35
     }
   ],
-  "exportedAt": "2026-04-26T14:17:25.073Z"
+  "exportedAt": "2026-04-26T15:48:41.915Z"
 }
