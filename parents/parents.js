@@ -67,12 +67,15 @@ function renderEventLine(e, rosterMap, opponent, score) {
   const min = e.minute ? `<span class="event-minute">${e.minute}</span> ` : '';
   if (e.type === 'goal') {
     const scorer = rosterMap[e.playerId] || '?';
-    const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
+    let suffix = '';
+    if (e.penalty) suffix = ' <span class="pk-tag">(PK)</span>';
+    else if (e.assistPlayerId) suffix = ` <span class="assist">(ast. ${rosterMap[e.assistPlayerId] || '?'})</span>`;
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span>${suffix}</div>`;
   } else if (e.type === 'opponent_goal') {
+    const pkSuffix = e.penalty ? ' <span class="pk-tag">(PK)</span>' : '';
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}</div>`;
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}${pkSuffix}</div>`;
   } else if (e.type === 'yellow_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
     return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${min}${who}</div>`;

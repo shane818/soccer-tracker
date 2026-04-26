@@ -172,12 +172,15 @@ function renderEventLine(e, rosterMap, opponent, score) {
   const min = e.minute ? `<span class="event-minute">${e.minute}</span> ` : '';
   if (e.type === 'goal') {
     const scorer = rosterMap[e.playerId] || '?';
-    const assist = e.assistPlayerId ? ` (ast. ${rosterMap[e.assistPlayerId] || '?'})` : '';
+    let suffix = '';
+    if (e.penalty) suffix = ' <span class="pk-tag">(PK)</span>';
+    else if (e.assistPlayerId) suffix = ` <span class="assist">(ast. ${rosterMap[e.assistPlayerId] || '?'})</span>`;
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span><span class="assist">${assist}</span></div>`;
+    return `<div class="goal-event"><span class="event-icon">⚽</span> ${scoreLine}${min}<span class="scorer">${scorer}</span>${suffix}</div>`;
   } else if (e.type === 'opponent_goal') {
+    const pkSuffix = e.penalty ? ' <span class="pk-tag">(PK)</span>' : '';
     const scoreLine = score ? `<span class="event-score">${score}</span> ` : '';
-    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}</div>`;
+    return `<div class="goal-event opp-event"><span class="event-icon">⚽</span> ${scoreLine}${min}${opponent}${pkSuffix}</div>`;
   } else if (e.type === 'yellow_card') {
     const who = cardRecipientLabel(e, rosterMap, opponent);
     return `<div class="goal-event card-event yellow"><span class="event-icon">🟨</span> ${min}${who}</div>`;
@@ -802,9 +805,11 @@ function recordGoal(playerId) {
   document.getElementById('assist-modal').classList.remove('hidden');
 }
 
-function confirmGoal(scorerId, assistId) {
+function confirmGoal(scorerId, assistId, isPenalty) {
   const game = getActiveGame();
-  game.events.push({ type: 'goal', playerId: scorerId, assistPlayerId: assistId || null, minute: getCurrentMinute() });
+  const event = { type: 'goal', playerId: scorerId, assistPlayerId: assistId || null, minute: getCurrentMinute() };
+  if (isPenalty) event.penalty = true;
+  game.events.push(event);
   saveActiveGame(game);
   document.getElementById('assist-modal').classList.add('hidden');
   pendingScorerId = null;
@@ -813,7 +818,12 @@ function confirmGoal(scorerId, assistId) {
 }
 
 function noAssist() {
-  confirmGoal(pendingScorerId, null);
+  confirmGoal(pendingScorerId, null, false);
+}
+
+function pkGoal() {
+  // Penalty kick — by definition no assist
+  confirmGoal(pendingScorerId, null, true);
 }
 
 function recordOpponentGoal() {
@@ -1246,7 +1256,7 @@ function renderEditGoals() {
     return;
   }
 
-  const labelsHtml = `<div class="edit-goal-labels"><span>Scorer</span><span>Assist</span><span></span></div>`;
+  const labelsHtml = `<div class="edit-goal-labels"><span>Scorer</span><span>Assist</span><span class="pk-label">PK</span><span></span></div>`;
 
   container.innerHTML = labelsHtml + editGoalEvents.map((e, i) => {
     const scorerOptions = roster.map(p =>
@@ -1255,11 +1265,13 @@ function renderEditGoals() {
     const assistOptions = `<option value="">None</option>` + roster.map(p =>
       `<option value="${p.id}" ${p.id === e.assistPlayerId ? 'selected' : ''}>${p.name}</option>`
     ).join('');
+    const isPK = !!e.penalty;
 
     return `
       <div class="edit-goal-row">
         <select onchange="updateEditGoalScorer(${i}, this.value)">${scorerOptions}</select>
-        <select onchange="updateEditGoalAssist(${i}, this.value)">${assistOptions}</select>
+        <select onchange="updateEditGoalAssist(${i}, this.value)" ${isPK ? 'disabled' : ''}>${assistOptions}</select>
+        <label class="pk-checkbox-wrap"><input type="checkbox" ${isPK ? 'checked' : ''} onchange="updateEditGoalPK(${i}, this.checked)"></label>
         <button class="btn-remove" onclick="removeEditGoal(${i})">✕</button>
       </div>
     `;
@@ -1272,6 +1284,16 @@ function updateEditGoalScorer(index, value) {
 
 function updateEditGoalAssist(index, value) {
   editGoalEvents[index].assistPlayerId = value ? parseInt(value) : null;
+}
+
+function updateEditGoalPK(index, checked) {
+  if (checked) {
+    editGoalEvents[index].penalty = true;
+    editGoalEvents[index].assistPlayerId = null; // PK has no assist by definition
+  } else {
+    delete editGoalEvents[index].penalty;
+  }
+  renderEditGoals();
 }
 
 function addEditGoal() {
@@ -1302,7 +1324,12 @@ function saveEditGame() {
   if (!date) { alert('Enter a date!'); return; }
 
   // Rebuild events array: goals, then opponent goals, then cards, then PKs
-  const events = editGoalEvents.map(e => ({ type: 'goal', playerId: e.playerId, assistPlayerId: e.assistPlayerId }));
+  const events = editGoalEvents.map(e => {
+    const ev = { type: 'goal', playerId: e.playerId, assistPlayerId: e.assistPlayerId };
+    if (e.minute) ev.minute = e.minute;
+    if (e.penalty) ev.penalty = true;
+    return ev;
+  });
   for (let i = 0; i < editOpponentGoalCount; i++) {
     events.push({ type: 'opponent_goal' });
   }
@@ -2027,6 +2054,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Assist modal
   document.getElementById('no-assist-btn').addEventListener('click', noAssist);
+  document.getElementById('pk-goal-btn-modal').addEventListener('click', pkGoal);
 
   // End game modal
   // (endgame-confirm modal removed — replaced by halftime/tied-game flow)

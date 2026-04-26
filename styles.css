@@ -913,6 +913,43 @@ body {
   max-width: 36px;
 }
 
+.edit-goal-labels .pk-label {
+  flex: 0 0 32px;
+  text-align: center;
+}
+
+.pk-checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  height: 36px;
+}
+
+.pk-checkbox-wrap input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: #C41E3A;
+  cursor: pointer;
+}
+
+.pk-tag {
+  color: #C41E3A;
+  font-weight: 700;
+  font-size: 0.85em;
+  margin-left: 4px;
+}
+
+.assist-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.assist-actions .btn {
+  flex: 1;
+}
+
 /* Card Button */
 .btn-card {
   background: #D4A017;
