@@ -1290,7 +1290,84 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1777208411494",
+      "date": "2026-04-26",
+      "opponent": "VYS Eagles Pre-ECNL 15B",
+      "goalsFor": 3,
+      "goalsAgainst": 6,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal",
+          "minute": "6'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "21'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5,
+          "minute": "25'"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null,
+          "minute": "29'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "30'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "44'"
+        },
+        {
+          "type": "yellow_card",
+          "team": "opponent",
+          "minute": "53'",
+          "jersey": "5"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "58'"
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": 11,
+          "minute": "65'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "69'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 35
     }
   ],
-  "exportedAt": "2026-04-20T12:31:39.007Z"
+  "exportedAt": "2026-04-26T14:17:25.073Z"
 }
