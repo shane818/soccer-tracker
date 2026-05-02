@@ -1367,7 +1367,86 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1777730449012",
+      "date": "2026-05-02",
+      "opponent": "Virginia United Pre-ECNL Roanoke B2015",
+      "goalsFor": 4,
+      "goalsAgainst": 6,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal",
+          "minute": "7'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "8'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "11'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "18'"
+        },
+        {
+          "type": "goal",
+          "playerId": 2,
+          "assistPlayerId": 3,
+          "minute": "32'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5,
+          "minute": "7'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "21'"
+        },
+        {
+          "type": "goal",
+          "playerId": 14,
+          "assistPlayerId": null,
+          "minute": "22'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5,
+          "minute": "24'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "28'"
+        },
+        {
+          "type": "yellow_card",
+          "team": "opponent",
+          "minute": "33'",
+          "jersey": "55"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 35
     }
   ],
-  "exportedAt": "2026-04-26T16:05:03.807Z"
+  "exportedAt": "2026-05-02T16:40:46.594Z"
 }
