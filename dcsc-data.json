@@ -1446,7 +1446,58 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1777822323812",
+      "date": "2026-05-03",
+      "opponent": "RU ORANGE PRE ECNL 1 B15",
+      "goalsFor": 1,
+      "goalsAgainst": 1,
+      "result": "D",
+      "events": [
+        {
+          "type": "yellow_card",
+          "team": "opponent",
+          "minute": "30'",
+          "jersey": "42"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": null,
+          "minute": "54'"
+        },
+        {
+          "type": "yellow_card",
+          "team": "dcsc",
+          "playerId": 11,
+          "minute": "65'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "67'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 35
     }
   ],
-  "exportedAt": "2026-05-02T16:40:46.594Z"
+  "exportedAt": "2026-05-04T00:42:16.118Z"
 }
