@@ -1497,7 +1497,58 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1778423464407",
+      "date": "2026-05-10",
+      "opponent": "Arlington SA 2015B Pre-ECNL (U10)",
+      "goalsFor": 3,
+      "goalsAgainst": 1,
+      "result": "W",
+      "events": [
+        {
+          "type": "opponent_goal",
+          "minute": "11'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": null,
+          "minute": "45'"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 3,
+          "minute": "47'"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null,
+          "minute": "48'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 35
     }
   ],
-  "exportedAt": "2026-05-04T00:42:16.118Z"
+  "exportedAt": "2026-05-10T16:25:28.304Z"
 }
