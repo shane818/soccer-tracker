@@ -1576,10 +1576,16 @@
           "minute": "16'"
         },
         {
+          "type": "opponent_goal"
+        },
+        {
           "type": "goal",
           "playerId": 14,
           "assistPlayerId": 1,
           "minute": "31'"
+        },
+         {
+          "type": "opponent_goal"
         },
         {
           "type": "goal",
@@ -1610,12 +1616,6 @@
           "playerId": 1,
           "assistPlayerId": null,
           "minute": "68'"
-        },
-        {
-          "type": "opponent_goal"
-        },
-        {
-          "type": "opponent_goal"
         }
       ],
       "playersPresent": [
