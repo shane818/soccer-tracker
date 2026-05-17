@@ -1584,7 +1584,7 @@
           "assistPlayerId": 1,
           "minute": "31'"
         },
-         {
+        {
           "type": "opponent_goal"
         },
         {
@@ -1637,7 +1637,94 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1779030032863",
+      "date": "2026-05-17",
+      "opponent": "LMVSC 2015B Pre-ECNL RL",
+      "goalsFor": 6,
+      "goalsAgainst": 4,
+      "result": "W",
+      "events": [
+        {
+          "type": "goal",
+          "playerId": 8,
+          "assistPlayerId": 11,
+          "minute": "0'"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null,
+          "minute": "1'"
+        },
+        {
+          "type": "goal",
+          "playerId": 5,
+          "assistPlayerId": 11,
+          "minute": "4'"
+        },
+        {
+          "type": "goal",
+          "playerId": 11,
+          "assistPlayerId": null,
+          "minute": "7'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "33'"
+        },
+        {
+          "type": "goal",
+          "playerId": 12,
+          "assistPlayerId": 11,
+          "minute": "43'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "56'"
+        },
+        {
+          "type": "yellow_card",
+          "team": "dcsc",
+          "playerId": 8,
+          "minute": "68'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "69'"
+        },
+        {
+          "type": "goal",
+          "playerId": 4,
+          "assistPlayerId": 1,
+          "minute": "70+2'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "70+4'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 35
     }
   ],
-  "exportedAt": "2026-05-16T21:35:49.225Z"
+  "exportedAt": "2026-05-17T16:19:36.129Z"
 }
