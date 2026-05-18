@@ -600,6 +600,39 @@ body {
   padding-top: 4px;
 }
 
+/* Pause / Resume button on scoreboard */
+.pause-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+.pause-btn.paused {
+  background: rgba(229, 62, 62, 0.55);
+}
+
+/* Opponent goal PK modal — wider action row */
+.opp-goal-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.opp-goal-actions .btn {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 0;
+}
+
 #score-half {
   font-size: 0.85rem;
   opacity: 0.8;
@@ -694,13 +727,15 @@ body {
   font-size: 0.9rem;
 }
 
-/* Modals (Assist, End Game, Edit Player, Edit Game, Delete Game) */
+/* Modals (Assist, End Game, Edit Player, Edit Game, Delete Game, Pause, Opp Goal) */
 #assist-modal,
 #card-modal,
 #endgame-confirm,
 #edit-player-modal,
 #edit-game-modal,
-#delete-game-confirm {
+#delete-game-confirm,
+#pause-confirm,
+#opp-goal-modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
@@ -715,7 +750,9 @@ body {
 #endgame-confirm.hidden,
 #edit-player-modal.hidden,
 #edit-game-modal.hidden,
-#delete-game-confirm.hidden {
+#delete-game-confirm.hidden,
+#pause-confirm.hidden,
+#opp-goal-modal.hidden {
   display: none;
 }
 

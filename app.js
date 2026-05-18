@@ -674,7 +674,14 @@ function resumeGame() {
   } else {
     restoreTimerState();
     showIngame();
-    startTimer();  // startTimer also requests wake lock
+    if (game.paused) {
+      // Don't auto-start; reflect the paused state
+      updateTimerDisplay();
+      requestWakeLock();
+    } else {
+      startTimer();  // startTimer also requests wake lock
+    }
+    updatePauseButton();
   }
 }
 
@@ -722,6 +729,7 @@ function showIngame() {
   renderPlayerGrid();
   updateGameControls();
   updateWakeLockUI();
+  updatePauseButton();
 }
 
 function renderScoreboard() {
@@ -827,11 +835,78 @@ function pkGoal() {
 }
 
 function recordOpponentGoal() {
+  // Ask whether it was a regular goal or a PK
+  document.getElementById('opp-goal-modal').classList.remove('hidden');
+}
+
+function confirmOpponentGoal(isPenalty) {
   const game = getActiveGame();
   game.goalsAgainst++;
-  game.events.push({ type: 'opponent_goal', minute: getCurrentMinute() });
+  const event = { type: 'opponent_goal', minute: getCurrentMinute() };
+  if (isPenalty) event.penalty = true;
+  game.events.push(event);
   saveActiveGame(game);
+  document.getElementById('opp-goal-modal').classList.add('hidden');
   renderScoreboard();
+}
+
+function cancelOpponentGoal() {
+  document.getElementById('opp-goal-modal').classList.add('hidden');
+}
+
+// ============================================
+// PAUSE / RESUME TIMER
+// ============================================
+function togglePause() {
+  const game = getActiveGame();
+  if (!game) return;
+  if (game.paused) {
+    // Resume directly — no confirmation needed
+    resumeFromPause();
+  } else {
+    // Pause — ask for confirmation
+    document.getElementById('pause-confirm').classList.remove('hidden');
+  }
+}
+
+function confirmPause() {
+  stopTimer();                                    // accumulates global timerElapsed, clears interval + startedAt
+  const game = getActiveGame();
+  if (!game) return;
+  game.paused = true;
+  game.timerElapsed = timerElapsed;               // persist the accurate accumulated total
+  game.timerStartedAt = null;
+  saveActiveGame(game);
+  updateTimerDisplay();                           // re-render to show the frozen time
+  document.getElementById('pause-confirm').classList.add('hidden');
+  updatePauseButton();
+}
+
+function cancelPause() {
+  document.getElementById('pause-confirm').classList.add('hidden');
+}
+
+function resumeFromPause() {
+  const game = getActiveGame();
+  if (!game) return;
+  game.paused = false;
+  saveActiveGame(game);
+  startTimer();
+  updatePauseButton();
+}
+
+function updatePauseButton() {
+  const btn = document.getElementById('pause-toggle');
+  if (!btn) return;
+  const game = getActiveGame();
+  // Hide entirely during PKs (untimed)
+  if (!game || (game.phase || 'regulation') === 'penalties') {
+    btn.style.display = 'none';
+    return;
+  }
+  btn.style.display = '';
+  btn.textContent = game.paused ? '▶ Resume' : '⏸ Pause';
+  btn.classList.toggle('paused', !!game.paused);
 }
 
 function undoLastEvent() {
@@ -909,6 +984,7 @@ function startSecondHalf() {
   const game = getActiveGame();
   game.half = 2;
   game.timerElapsed = 0;
+  game.paused = false;
   saveActiveGame(game);
   resetTimer();
   showIngame();
@@ -958,6 +1034,7 @@ function startOvertime() {
   game.otHalfLength = otLen;
   game.half = 1;
   game.timerElapsed = 0;
+  game.paused = false;
   saveActiveGame(game);
   resetTimer();
   showIngame();
@@ -2055,6 +2132,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Assist modal
   document.getElementById('no-assist-btn').addEventListener('click', noAssist);
   document.getElementById('pk-goal-btn-modal').addEventListener('click', pkGoal);
+
+  // Opponent Goal PK modal
+  document.getElementById('opp-goal-regular-btn').addEventListener('click', () => confirmOpponentGoal(false));
+  document.getElementById('opp-goal-pk-btn').addEventListener('click', () => confirmOpponentGoal(true));
+  document.getElementById('opp-goal-cancel-btn').addEventListener('click', cancelOpponentGoal);
+
+  // Pause confirmation modal
+  document.getElementById('pause-ok-btn').addEventListener('click', confirmPause);
+  document.getElementById('pause-cancel-btn').addEventListener('click', cancelPause);
 
   // End game modal
   // (endgame-confirm modal removed — replaced by halftime/tied-game flow)

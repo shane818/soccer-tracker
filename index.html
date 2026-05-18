@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
@@ -105,6 +105,7 @@
     <div id="ingame-view" class="overlay-screen hidden">
       <div id="scoreboard">
         <button id="wake-lock-toggle" class="wake-lock-btn" onclick="toggleWakeLock()" style="display:none">🔓 Screen Off</button>
+        <button id="pause-toggle" class="pause-btn" onclick="togglePause()">⏸ Pause</button>
         <div id="game-timer">0:00</div>
         <div id="score-half">1st Half</div>
         <div id="score-display">
@@ -209,6 +210,31 @@
       <div class="assist-actions">
         <button id="no-assist-btn" class="btn btn-secondary">No Assist</button>
         <button id="pk-goal-btn-modal" class="btn btn-warning">PK (Penalty)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pause Confirmation Modal -->
+  <div id="pause-confirm" class="hidden">
+    <div class="modal-content">
+      <h3>Pause Timer?</h3>
+      <p id="pause-confirm-msg">The game clock will stop. Tap Resume when ready to continue.</p>
+      <div class="modal-actions">
+        <button id="pause-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="pause-ok-btn" class="btn btn-warning">Pause</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opponent Goal PK Modal -->
+  <div id="opp-goal-modal" class="hidden">
+    <div class="modal-content">
+      <h3>Opponent Goal</h3>
+      <p>Was this a penalty kick?</p>
+      <div class="modal-actions opp-goal-actions">
+        <button id="opp-goal-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="opp-goal-regular-btn" class="btn btn-primary">Regular Goal</button>
+        <button id="opp-goal-pk-btn" class="btn btn-warning">PK Goal</button>
       </div>
     </div>
   </div>
