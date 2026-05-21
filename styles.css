@@ -622,6 +622,66 @@ body {
   background: rgba(229, 62, 62, 0.55);
 }
 
+/* Activity button — sits next to Pause */
+.activity-btn {
+  position: absolute;
+  top: 8px;
+  left: 92px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+/* Activity modal — scrollable event log */
+.activity-modal-content {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-score-summary {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #2B2D6B;
+  margin: 4px 0 12px;
+}
+
+.activity-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  min-height: 80px;
+}
+
+.activity-list .goal-event {
+  padding: 6px 4px;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.activity-list .goal-event:last-child {
+  border-bottom: none;
+}
+
+.activity-empty {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  padding: 24px 12px;
+}
+
 /* Opponent goal PK modal — wider action row */
 .opp-goal-actions {
   flex-wrap: wrap;
@@ -735,7 +795,8 @@ body {
 #edit-game-modal,
 #delete-game-confirm,
 #pause-confirm,
-#opp-goal-modal {
+#opp-goal-modal,
+#activity-modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
@@ -752,7 +813,8 @@ body {
 #edit-game-modal.hidden,
 #delete-game-confirm.hidden,
 #pause-confirm.hidden,
-#opp-goal-modal.hidden {
+#opp-goal-modal.hidden,
+#activity-modal.hidden {
   display: none;
 }
 

@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -106,6 +106,7 @@
       <div id="scoreboard">
         <button id="wake-lock-toggle" class="wake-lock-btn" onclick="toggleWakeLock()" style="display:none">🔓 Screen Off</button>
         <button id="pause-toggle" class="pause-btn" onclick="togglePause()">⏸ Pause</button>
+        <button id="activity-btn" class="activity-btn" onclick="showActivity()">📋 Activity</button>
         <div id="game-timer">0:00</div>
         <div id="score-half">1st Half</div>
         <div id="score-display">
@@ -211,6 +212,16 @@
         <button id="no-assist-btn" class="btn btn-secondary">No Assist</button>
         <button id="pk-goal-btn-modal" class="btn btn-warning">PK (Penalty)</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Activity Modal -->
+  <div id="activity-modal" class="hidden">
+    <div class="modal-content activity-modal-content">
+      <h3>Game Activity</h3>
+      <div id="activity-score-summary" class="activity-score-summary"></div>
+      <div id="activity-list" class="activity-list"></div>
+      <button class="btn btn-primary btn-full" onclick="closeActivity()">Close</button>
     </div>
   </div>
 

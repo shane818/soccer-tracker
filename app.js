@@ -909,6 +909,44 @@ function updatePauseButton() {
   btn.classList.toggle('paused', !!game.paused);
 }
 
+// ============================================
+// IN-GAME ACTIVITY LOG
+// ============================================
+function showActivity() {
+  const game = getActiveGame();
+  if (!game) return;
+
+  // Build roster map including guest players
+  const roster = getGameRoster(game);
+  const rosterMap = {};
+  roster.forEach(p => rosterMap[p.id] = p.name);
+
+  // Render events chronologically with running score (same as expanded game card)
+  const events = game.events || [];
+  let runDCSC = 0, runOpp = 0;
+  const lines = events.map(e => {
+    let score = null;
+    if (e.type === 'goal') { runDCSC++; score = `${runDCSC}-${runOpp}`; }
+    else if (e.type === 'opponent_goal') { runOpp++; score = `${runDCSC}-${runOpp}`; }
+    return renderEventLine(e, rosterMap, game.opponent, score);
+  }).join('');
+
+  // Score summary at the top
+  const summaryEl = document.getElementById('activity-score-summary');
+  summaryEl.textContent = `DCSC ${runDCSC} - ${runOpp} ${game.opponent}`;
+
+  const listEl = document.getElementById('activity-list');
+  listEl.innerHTML = events.length > 0
+    ? lines
+    : '<div class="activity-empty">No events yet — record a goal or card to see it here.</div>';
+
+  document.getElementById('activity-modal').classList.remove('hidden');
+}
+
+function closeActivity() {
+  document.getElementById('activity-modal').classList.add('hidden');
+}
+
 function undoLastEvent() {
   const game = getActiveGame();
   if (game.events.length === 0) {
