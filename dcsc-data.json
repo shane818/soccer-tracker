@@ -1724,7 +1724,103 @@
       ],
       "guestPlayers": [],
       "halfLength": 35
+    },
+    {
+      "id": "game_1779547271374",
+      "date": "2026-05-23",
+      "opponent": "Virginia Soccer Association VSA 15B",
+      "goalsFor": 1,
+      "goalsAgainst": 3,
+      "result": "L",
+      "events": [
+        {
+          "type": "opponent_goal",
+          "minute": "10'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "20'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "40'"
+        },
+        {
+          "type": "goal",
+          "playerId": 14,
+          "assistPlayerId": null,
+          "minute": "55'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 30
+    },
+    {
+      "id": "game_1779561555023",
+      "date": "2026-05-23",
+      "opponent": "Charlottesville Area SOCA 2015 Boys Blue",
+      "goalsFor": 2,
+      "goalsAgainst": 2,
+      "result": "D",
+      "events": [
+        {
+          "type": "opponent_goal",
+          "minute": "27'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 8,
+          "minute": "34'"
+        },
+        {
+          "type": "goal",
+          "playerId": 3,
+          "assistPlayerId": 5,
+          "minute": "43'"
+        },
+        {
+          "type": "opponent_goal",
+          "minute": "60+2'"
+        }
+      ],
+      "playersPresent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "guestPlayers": [],
+      "halfLength": 30
     }
   ],
-  "exportedAt": "2026-05-17T16:19:36.129Z"
+  "exportedAt": "2026-05-23T23:33:02.105Z"
 }
